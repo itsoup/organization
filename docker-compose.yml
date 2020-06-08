@@ -12,6 +12,7 @@ services:
     restart: unless-stopped
     networks:
       - itsoup
+      - app_network
 
   organization.service:
     image: josepostiga/php:7.4-fpm
@@ -22,7 +23,8 @@ services:
       - ./:/var/www/html
     restart: unless-stopped
     networks:
-      - itsoup
+      - app_network
+      - data_network
 
   organization.db:
     image: mariadb
@@ -34,11 +36,13 @@ services:
       - itsoup-organization-db:/var/lib/mysql
     restart: unless-stopped
     networks:
-      - itsoup
+      - data_network
 
 volumes:
   itsoup-organization-db:
 
 networks:
+  app_network:
+  data_network:
   itsoup:
     external: true
