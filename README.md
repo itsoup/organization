@@ -2,6 +2,11 @@
 
 (badges here)
 
+**Overview**
+
+* Aggregators for Customers’ information.
+* Authorization and authentication of Users, via Roles and Permissions.
+
 Customer resource is related to an individual or a company. By itself, a Customer resource is an aggregator for all its information registered in the software.
 
 The User resource is an account with authorization to access some, or all, information of a Customer and it's directly associated with a real person. But a User resource isn’t required to belong to a Customer, and when that’s the case, the User must be considered a system operator. This is to differentiate the service provider from the service receiver, but since they’re all Users, and they share many of the same functionality, there’s no point in separating them in different modules.
