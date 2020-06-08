@@ -2,10 +2,12 @@
 
 (badges here)
 
-**About this service**
+## Quick review
 
 * Aggregators for Customers’ information.
 * Authorization and authentication of Users, via Roles and Permissions.
+
+**About this service**
 
 Customer resource is related to an individual or a company. By itself, a Customer resource is an aggregator for all its information registered in the software.
 
