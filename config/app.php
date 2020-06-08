@@ -175,6 +175,12 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * Domains Service Providers...
+         */
+        Domains\Customers\CustomersServiceProvider::class,
+        Domains\Users\UsersServiceProvider::class,
+
     ],
 
     /*
