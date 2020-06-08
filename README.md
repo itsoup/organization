@@ -2,7 +2,7 @@
 
 (badges here)
 
-**Overview**
+**About this service**
 
 * Aggregators for Customers’ information.
 * Authorization and authentication of Users, via Roles and Permissions.
