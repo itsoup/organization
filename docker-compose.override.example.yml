@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  server:
+  organization.server:
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.itsoup-organization-stripprefix.stripprefix.prefixes=/organization"
@@ -11,13 +11,17 @@ services:
     networks:
       - web
 
-  db:
+  organization.db:
     ports:
       - 33061:3306
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: organization
+    networks:
+      - maintenance
 
 networks:
   web:
+    external: true
+  maintenance:
     external: true

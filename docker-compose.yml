@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  server:
+  organization.server:
     image: nginx
     expose:
       - 80
@@ -13,7 +13,7 @@ services:
     networks:
       - itsoup
 
-  service:
+  organization.service:
     image: josepostiga/php:7.4-fpm
     user: "1000:1000"
     expose:
@@ -24,7 +24,7 @@ services:
     networks:
       - itsoup
 
-  db:
+  organization.db:
     image: mariadb
     environment:
       MYSQL_DATABASE: organization
