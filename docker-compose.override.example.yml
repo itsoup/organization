@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  server:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.itsoup-organization-stripprefix.stripprefix.prefixes=/organization"
+      - "traefik.http.routers.itsoup-organization.entrypoints=http"
+      - "traefik.http.routers.itsoup-organization.rule=Host(`itsoup.test`) && PathPrefix(`/organization`)"
+      - "traefik.http.routers.itsoup-organization.middlewares=itsoup-organization-stripprefix@docker"
+    networks:
+      - web
+
+  db:
+    ports:
+      - 33061:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: organization
+
+networks:
+  web:
+    external: true

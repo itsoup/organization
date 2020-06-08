@@ -1,0 +1,44 @@
+version: "3.7"
+
+services:
+  server:
+    image: nginx
+    expose:
+      - 80
+    volumes:
+      - ./.docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./.docker/server.conf:/etc/nginx/conf.d/server.conf:ro
+      - ./:/var/www/html
+    restart: unless-stopped
+    networks:
+      - itsoup
+
+  service:
+    image: josepostiga/php:7.4-fpm
+    user: "1000:1000"
+    expose:
+      - 9000
+    volumes:
+      - ./:/var/www/html
+    restart: unless-stopped
+    networks:
+      - itsoup
+
+  db:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: organization
+    expose:
+      - 3306
+    volumes:
+      - itsoup-organization-db:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - itsoup
+
+volumes:
+  itsoup-organization-db:
+
+networks:
+  itsoup:
+    external: true
