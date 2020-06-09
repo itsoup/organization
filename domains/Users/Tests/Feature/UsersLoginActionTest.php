@@ -4,6 +4,7 @@ namespace Domains\Users\Tests\Feature;
 
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\PersonalAccessToken;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -149,5 +150,26 @@ class UsersLoginActionTest extends TestCase
 
         $this->postJson('/login')
             ->assertForbidden();
+    }
+
+    /** @test */
+    public function it_invalidate_old_tokens_when_using_same_client_name(): void
+    {
+        /** @var PersonalAccessToken $generatedToken */
+        $generatedToken = $this->user->createToken('Device Client Name')->accessToken;
+
+        $this->postJson(
+            '/login',
+            [
+                'email' => $this->user->email,
+                'password' => 'password',
+                'client_name' => 'Device Client Name',
+            ],
+        )
+            ->assertSuccessful();
+
+        $this->assertDatabaseMissing('personal_access_tokens', [
+            'id' => $generatedToken->id,
+        ]);
     }
 }

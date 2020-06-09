@@ -59,4 +59,11 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function revokePreviousTokens(string $name): void
+    {
+        $this->tokens()
+            ->where('name', $name)
+            ->delete();
+    }
 }

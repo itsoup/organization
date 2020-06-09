@@ -31,6 +31,8 @@ class UsersLoginAction extends Controller
             ]);
         }
 
+        $user->revokePreviousTokens($request->client_name);
+
         return AccessTokenResource::make($user->createToken($request->client_name));
     }
 }
