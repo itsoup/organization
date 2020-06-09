@@ -4,10 +4,8 @@ services:
   organization.server:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.middlewares.itsoup-organization-stripprefix.stripprefix.prefixes=/organization"
       - "traefik.http.routers.itsoup-organization.entrypoints=http"
-      - "traefik.http.routers.itsoup-organization.rule=Host(`itsoup.test`) && PathPrefix(`/organization`)"
-      - "traefik.http.routers.itsoup-organization.middlewares=itsoup-organization-stripprefix@docker"
+      - "traefik.http.routers.itsoup-organization.rule=Host(`organization.itsoup.test`)"
     networks:
       - web
 

@@ -11,7 +11,6 @@ services:
       - ./:/var/www/html
     restart: unless-stopped
     networks:
-      - itsoup
       - app_network
 
   organization.service:
@@ -44,5 +43,3 @@ volumes:
 networks:
   app_network:
   data_network:
-  itsoup:
-    external: true
