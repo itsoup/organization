@@ -2,7 +2,7 @@
 name: Feature request or enhancement
 about: Suggest an idea or a small increment for this project
 title: ''
-labels: type/enhancement
+labels: enhancement
 assignees: ''
 
 ---

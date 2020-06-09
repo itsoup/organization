@@ -2,7 +2,7 @@
 name: User Story
 about: Enhancements or new module development
 title: ''
-labels: type/story
+labels: story
 assignees: ''
 
 ---
