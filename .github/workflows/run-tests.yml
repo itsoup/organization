@@ -1,4 +1,4 @@
-name: "Run Tests"
+name: "Run tests"
 
 on:
   push:
@@ -9,14 +9,14 @@ on:
         - master
 
 jobs:
-  test:
+  testing:
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: true
       matrix:
         php: [7.4]
-    name: Testing on PHP ${{ matrix.php }}
+
+    name: For PHP ${{ matrix.php }}
 
     steps:
       - name: Checkout code
@@ -32,7 +32,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: curl, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, iconv
           coverage: none
 
       - name: Install dependencies
