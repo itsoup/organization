@@ -1,6 +1,6 @@
 # ITsoup's Organization domain service
 
-(badges here)
+![Run tests](https://github.com/itsoup/organization/workflows/Run%20tests/badge.svg)
 
 ## Quick review
 
