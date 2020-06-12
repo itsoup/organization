@@ -16,8 +16,7 @@ jobs:
       fail-fast: true
       matrix:
         php: [7.4]
-        dependency-version: [prefer-lowest, prefer-stable]
-    name: P${{ matrix.php }} - ${{ matrix.dependency-version }}
+    name: Testing on PHP ${{ matrix.php }}
 
     steps:
       - name: Checkout code
@@ -37,7 +36,7 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        run: composer install --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
+        run: composer install --no-interaction --no-suggest
 
       - name: Execute tests
         run: vendor/bin/phpunit --testdox
