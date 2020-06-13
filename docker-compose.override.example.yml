@@ -1,15 +1,16 @@
 version: "3.7"
 
 services:
-  organization.server:
+  server:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.itsoup-organization.entrypoints=http"
       - "traefik.http.routers.itsoup-organization.rule=Host(`organization.itsoup.test`)"
+      - "traefik.http.services.itsoup-organization.loadbalancer.healthcheck.path=/health-check"
     networks:
       - web
 
-  organization.db:
+  db:
     ports:
       - 33061:3306
     environment:
