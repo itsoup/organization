@@ -7,6 +7,7 @@ services:
       - "traefik.http.routers.itsoup-organization.entrypoints=http"
       - "traefik.http.routers.itsoup-organization.rule=Host(`organization.itsoup.test`)"
       - "traefik.http.services.itsoup-organization.loadbalancer.healthcheck.path=/health-check"
+      - "traefik.http.services.itsoup-organization.loadbalancer.healthcheck.interval=60s"
     networks:
       - web
 
