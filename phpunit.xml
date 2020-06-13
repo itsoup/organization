@@ -5,6 +5,9 @@
          colors="true"
 >
     <testsuites>
+        <testsuite name="App">
+            <directory suffix="Test.php">./tests</directory>
+        </testsuite>
         <testsuite name="Domains">
             <directory suffix="Test.php">./domains/*/Tests</directory>
         </testsuite>
@@ -17,6 +20,7 @@
             <exclude>
                 <directory suffix=".php">./domains/*/Database</directory>
                 <directory suffix=".php">./domains/*/Tests</directory>
+                <directory suffix=".php">./tests</directory>
             </exclude>
         </whitelist>
     </filter>
