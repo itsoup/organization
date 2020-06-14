@@ -7,7 +7,7 @@ use Domains\Users\Models\User;
 use Domains\Users\Http\Requests\UserStoreRequest;
 use Illuminate\Http\Response;
 
-class UsersStoreAction extends Controller
+class UsersStoreController extends Controller
 {
     private User $users;
 

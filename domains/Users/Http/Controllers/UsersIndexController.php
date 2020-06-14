@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class UsersIndexAction extends Controller
+class UsersIndexController extends Controller
 {
     private User $users;
 
