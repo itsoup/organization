@@ -1,6 +1,6 @@
 <?php
 
-namespace Domains\Customers\Tests\Feature;
+namespace Domains\Customers\Tests\Feature\Controllers;
 
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
-class CustomersStoreActionTest extends TestCase
+class CustomersStoreControllerTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;

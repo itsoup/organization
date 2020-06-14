@@ -1,6 +1,6 @@
 <?php
 
-namespace Domains\Customers\Tests\Unit;
+namespace Domains\Customers\Tests\Unit\Models;
 
 use Carbon\Carbon;
 use Domains\Customers\Models\Customer;

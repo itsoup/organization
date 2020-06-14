@@ -1,6 +1,6 @@
 <?php
 
-namespace Domains\Customers\Tests\Feature;
+namespace Domains\Customers\Tests\Feature\Controllers;
 
 use Domains\Customers\Models\Customer;
 use Domains\Users\Models\User;
@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
-class CustomersDeleteActionTest extends TestCase
+class CustomersDeleteControllerTest extends TestCase
 {
     use RefreshDatabase;
 
