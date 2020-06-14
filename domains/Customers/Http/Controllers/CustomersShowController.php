@@ -19,11 +19,11 @@ class CustomersShowController extends Controller
 
     public function __invoke(int $customerId): CustomerResource
     {
-        $this->authorize('view', $this->customers);
-
         $resource = $this->customers
             ->withTrashed()
             ->findOrFail($customerId);
+
+        $this->authorize('view', $resource);
 
         return CustomerResource::make($resource);
     }
