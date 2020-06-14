@@ -2,14 +2,18 @@
 
 namespace Domains\Users\Http\Requests;
 
+use Domains\Users\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserStoreRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->isSystemOperator()
-            || ($this->user()->isUser() && $this->missing('customer_id'));
+        return $this->user()
+            ->can('create', [
+                User::class,
+                $this->missing('customer_id'),
+            ]);
     }
 
     public function rules(): array

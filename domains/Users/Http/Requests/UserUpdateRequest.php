@@ -2,19 +2,19 @@
 
 namespace Domains\Users\Http\Requests;
 
+use Domains\Users\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserUpdateRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->id !== (int) $this->route('userId')
-            && (
-                $this->user()->isSystemOperator()
-                || (
-                    $this->user()->isUser() && $this->missing('customer_id')
-                )
-            );
+        return $this->user()
+            ->can('update', [
+                User::class,
+                $this->route('userId'),
+                $this->missing('customer_id'),
+            ]);
     }
 
     public function rules(): array

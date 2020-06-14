@@ -11,7 +11,7 @@ class UserPolicy
 
     public function before(User $authenticatedUser, string $ability): ?bool
     {
-        if ($authenticatedUser->isSystemOperator()) {
+        if ($ability !== 'update' && $authenticatedUser->isSystemOperator()) {
             return true;
         }
 
@@ -20,7 +20,24 @@ class UserPolicy
 
     public function viewAny(): bool
     {
-        return false;
+        return true;
+    }
+
+    public function create(User $authenticatedUser, bool $requestMissingCustomerId): bool
+    {
+        return $authenticatedUser->isSystemOperator()
+            || ($authenticatedUser->isUser() && $requestMissingCustomerId);
+    }
+
+    public function update(User $authenticatedUser, int $resourceId, bool $requestMissingCustomerId): bool
+    {
+        return $authenticatedUser->id !== $resourceId
+            && (
+                $authenticatedUser->isSystemOperator()
+                || (
+                    $authenticatedUser->isUser() && $requestMissingCustomerId
+                )
+            );
     }
 
     public function delete(User $authenticatedUser, User $resource): bool
