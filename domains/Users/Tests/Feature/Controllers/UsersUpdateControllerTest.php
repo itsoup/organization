@@ -1,6 +1,6 @@
 <?php
 
-namespace Domains\Users\Tests\Feature;
+namespace Domains\Users\Tests\Feature\Controllers;
 
 use Domains\Customers\Models\Customer;
 use Domains\Users\Models\User;
@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
-class UsersUpdateActionTest extends TestCase
+class UsersUpdateControllerTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;

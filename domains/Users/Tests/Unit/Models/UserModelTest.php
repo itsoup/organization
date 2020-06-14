@@ -1,6 +1,6 @@
 <?php
 
-namespace Domains\Users\Tests\Unit;
+namespace Domains\Users\Tests\Unit\Models;
 
 use Domains\Users\Casts\PasswordCast;
 use Domains\Customers\Models\Customer;

@@ -1,13 +1,13 @@
 <?php
 
-namespace Domains\Users\Tests\Feature;
+namespace Domains\Users\Tests\Feature\Controllers;
 
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
-class UsersIndexActionTest extends TestCase
+class UsersIndexControllerTest extends TestCase
 {
     use RefreshDatabase;
 
