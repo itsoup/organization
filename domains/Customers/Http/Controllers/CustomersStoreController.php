@@ -7,7 +7,7 @@ use Domains\Customers\Models\Customer;
 use Domains\Customers\Http\Requests\CustomerStoreRequest;
 use Illuminate\Http\Response;
 
-class CustomersStoreAction extends Controller
+class CustomersStoreController extends Controller
 {
     private Customer $customers;
 

@@ -8,7 +8,7 @@ use Domains\Customers\Http\Requests\CustomerUpdateRequest;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
-class CustomersUpdateAction extends Controller
+class CustomersUpdateController extends Controller
 {
     private Customer $customers;
 

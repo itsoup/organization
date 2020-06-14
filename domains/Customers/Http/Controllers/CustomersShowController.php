@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Domains\Customers\Models\Customer;
 use Domains\Customers\Http\Resources\CustomerResource;
 
-class CustomersShowAction extends Controller
+class CustomersShowController extends Controller
 {
     private Customer $customers;
 

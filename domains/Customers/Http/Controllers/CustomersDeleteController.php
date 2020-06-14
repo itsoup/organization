@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Domains\Customers\Models\Customer;
 use Illuminate\Http\Response;
 
-class CustomersDeleteAction extends Controller
+class CustomersDeleteController extends Controller
 {
     private Customer $customers;
 
