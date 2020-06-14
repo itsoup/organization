@@ -3,8 +3,8 @@
 namespace Domains\Users;
 
 use Domains\Users\Console\Commands\UsersCreateCommand;
-use Domains\Users\Repositories\AccessTokenRepository;
-use Domains\Users\Repositories\UserRepository;
+use Domains\Users\Bridges\AccessTokenRepository;
+use Domains\Users\Bridges\UserRepository;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Bridge\AccessTokenRepository as PassportAccessTokenRepository;

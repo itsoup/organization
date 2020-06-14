@@ -1,6 +1,6 @@
 <?php
 
-namespace Domains\Users\ValueObjects;
+namespace Domains\Users\Bridges;
 
 use Domains\Users\Models\User;
 use Laravel\Passport\Bridge\AccessToken as PassportAccessToken;

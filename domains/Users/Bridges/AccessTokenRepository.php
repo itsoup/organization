@@ -1,8 +1,7 @@
 <?php
 
-namespace Domains\Users\Repositories;
+namespace Domains\Users\Bridges;
 
-use Domains\Users\ValueObjects\UserAccessToken;
 use Laravel\Passport\Bridge\AccessTokenRepository as PassportAccessTokenRepository;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 
