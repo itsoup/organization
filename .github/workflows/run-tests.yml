@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: |
           composer install --no-interaction --no-suggest
-          php artisan passport:install --no-interaction
+          php artisan passport:keys --no-interaction
 
       - name: Execute tests
         run: vendor/bin/phpunit --testdox
