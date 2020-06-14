@@ -19,7 +19,11 @@ class UsersDeleteController extends Controller
 
     public function __invoke(int $userId)
     {
-        $this->users->findOrFail($userId)->delete();
+        $resource = $this->users->findOrFail($userId);
+
+        $this->authorize('delete', $resource);
+
+        $resource->delete();
 
         return new Response('', Response::HTTP_NO_CONTENT);
     }

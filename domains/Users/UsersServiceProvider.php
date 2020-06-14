@@ -4,6 +4,9 @@ namespace Domains\Users;
 
 use Domains\Users\Console\Commands\UsersCreateCommand;
 use Domains\Users\Bridges\AccessTokenRepository;
+use Domains\Users\Models\User;
+use Domains\Users\Policies\UserPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Bridge\AccessTokenRepository as PassportAccessTokenRepository;
@@ -23,6 +26,8 @@ class UsersServiceProvider extends ServiceProvider
         $this->bootCommands();
 
         $this->bootRoutes();
+
+        $this->bootPolicies();
     }
 
     private function bootCommands(): void
@@ -36,5 +41,10 @@ class UsersServiceProvider extends ServiceProvider
     {
         Route::middleware('api')
             ->group(fn () => $this->loadRoutesFrom(__DIR__ . '/Routes/api.php'));
+    }
+
+    private function bootPolicies(): void
+    {
+        Gate::policy(User::class, UserPolicy::class);
     }
 }

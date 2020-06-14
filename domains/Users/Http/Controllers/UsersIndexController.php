@@ -22,6 +22,8 @@ class UsersIndexController extends Controller
 
     public function __invoke(Request $request): AnonymousResourceCollection
     {
+        $this->authorize('viewAny', $this->users);
+
         $resources = $this->users
             ->whereKeyNot($request->user()->id)
             ->when($request->user()->isUser(), static fn (Builder $users) => $users->customerId($request->user()->customer_id))

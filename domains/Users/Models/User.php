@@ -32,6 +32,7 @@ class User extends Authenticatable implements UserEntityInterface
     ];
 
     protected $casts = [
+        'customer_id' => 'int',
         'email_verified_at' => 'datetime',
         'password' => PasswordCast::class,
     ];

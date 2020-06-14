@@ -72,4 +72,38 @@ class UsersDeleteControllerTest extends TestCase
         $this->deleteJson('/users/5')
             ->assertNotFound();
     }
+
+    /** @test */
+    public function users_can_delete_other_users_related_with_their_customer(): void
+    {
+        /** @var User $userToDelete */
+        $userToDelete = factory(User::class)
+            ->state('user')
+            ->create([
+                'customer_id' => $this->user->customer_id,
+            ]);
+
+        Passport::actingAs($this->user);
+
+        $this->deleteJson("users/{$userToDelete->id}")
+            ->assertNoContent();
+
+        $this->assertTrue($userToDelete->fresh()->trashed());
+    }
+
+    /** @test */
+    public function users_cant_delete_other_users_of_other_customers(): void
+    {
+        /** @var User $userToDelete */
+        $userToDelete = factory(User::class)
+            ->state('user')
+            ->create();
+
+        Passport::actingAs($this->user);
+
+        $this->deleteJson("users/{$userToDelete->id}")
+            ->assertForbidden();
+
+        $this->assertFalse($userToDelete->fresh()->trashed());
+    }
 }
