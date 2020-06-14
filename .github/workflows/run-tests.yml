@@ -25,7 +25,9 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v1
         with:
-          path: ~/.composer/cache/files
+          path: |
+            ~/.composer/cache/files
+            storage/oauth-*
           key: dependencies-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
 
       - name: Setup PHP
