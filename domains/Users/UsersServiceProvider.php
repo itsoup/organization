@@ -3,13 +3,19 @@
 namespace Domains\Users;
 
 use Domains\Users\Console\Commands\UsersCreateCommand;
+use Domains\Users\Repositories\AccessTokenRepository;
+use Domains\Users\Repositories\UserRepository;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Bridge\AccessTokenRepository as PassportAccessTokenRepository;
+use Laravel\Passport\Bridge\UserRepository as PassportUserRepository;
 
 class UsersServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        $this->app->bind(PassportAccessTokenRepository::class, AccessTokenRepository::class);
+        $this->app->bind(PassportUserRepository::class, UserRepository::class);
     }
 
     public function boot(): void

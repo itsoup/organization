@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use League\OAuth2\Server\Entities\UserEntityInterface;
 
-class User extends Authenticatable
+class User extends Authenticatable implements UserEntityInterface
 {
     use HasApiTokens;
     use Notifiable;
@@ -65,5 +66,13 @@ class User extends Authenticatable
         $this->tokens()
             ->where('name', $name)
             ->delete();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getAuthIdentifier();
     }
 }
