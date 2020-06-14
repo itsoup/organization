@@ -15,7 +15,7 @@ class UsersIndexAction extends Controller
 
     public function __construct(User $users)
     {
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth');
 
         $this->users = $users;
     }

@@ -5,7 +5,7 @@ namespace Domains\Customers\Tests\Feature;
 use Domains\Customers\Models\Customer;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class CustomersDeleteActionTest extends TestCase
@@ -40,7 +40,7 @@ class CustomersDeleteActionTest extends TestCase
             ->state('user')
             ->create();
 
-        Sanctum::actingAs($user);
+        Passport::actingAs($user);
 
         $this->deleteJson("/customers/{$this->customer->id}")
             ->assertForbidden();
@@ -49,7 +49,7 @@ class CustomersDeleteActionTest extends TestCase
     /** @test */
     public function it_deletes_customer(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->deleteJson("/customers/{$this->customer->id}")
             ->assertNoContent();
@@ -62,7 +62,7 @@ class CustomersDeleteActionTest extends TestCase
     /** @test */
     public function it_fails_to_delete_non_existent_customers(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->deleteJson('/customers/2')
             ->assertNotFound();

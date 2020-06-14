@@ -5,7 +5,7 @@ namespace Domains\Customers\Tests\Feature;
 use Domains\Customers\Models\Customer;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class CustomersIndexActionTest extends TestCase
@@ -39,7 +39,7 @@ class CustomersIndexActionTest extends TestCase
             ->state('user')
             ->create();
 
-        Sanctum::actingAs($user);
+        Passport::actingAs($user);
 
         $this->getJson('/customers')
             ->assertForbidden();
@@ -50,7 +50,7 @@ class CustomersIndexActionTest extends TestCase
     {
         $deletedCustomer = factory(Customer::class)->state('deleted')->create();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->getJson('/customers')
             ->assertSuccessful()
@@ -82,7 +82,7 @@ class CustomersIndexActionTest extends TestCase
     {
         $deletedCustomer = factory(Customer::class)->state('deleted')->create();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->getJson('/customers?deleted=true')
             ->assertSuccessful()
@@ -96,7 +96,7 @@ class CustomersIndexActionTest extends TestCase
     {
         factory(Customer::class, 15)->create();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->getJson('/customers?page=2')
             ->assertSuccessful()

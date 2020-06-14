@@ -6,7 +6,7 @@ use Domains\Customers\Models\Customer;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Laravel\Sanctum\Sanctum;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class UsersUpdateActionTest extends TestCase
@@ -49,7 +49,7 @@ class UsersUpdateActionTest extends TestCase
     {
         $anotherCustomer = factory(Customer::class)->create();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->name,
@@ -68,7 +68,7 @@ class UsersUpdateActionTest extends TestCase
     /** @test */
     public function users_can_update_other_users_related_with_their_customer(): void
     {
-        Sanctum::actingAs($this->user);
+        Passport::actingAs($this->user);
 
         $payload = [
             'name' => $this->faker->name,
@@ -88,7 +88,7 @@ class UsersUpdateActionTest extends TestCase
     {
         $anotherCustomer = factory(Customer::class)->create();
 
-        Sanctum::actingAs($this->user);
+        Passport::actingAs($this->user);
 
         $payload = [
             'name' => $this->faker->name,
@@ -103,7 +103,7 @@ class UsersUpdateActionTest extends TestCase
     /** @test */
     public function system_operators_can_update_customer_id_to_null(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->name,
@@ -126,7 +126,7 @@ class UsersUpdateActionTest extends TestCase
                 'customer_id' => $this->userToUpdate->customer_id,
             ]);
 
-        Sanctum::actingAs($anotherUser);
+        Passport::actingAs($anotherUser);
 
         $payload = [
             'name' => $this->faker->name,
@@ -141,7 +141,7 @@ class UsersUpdateActionTest extends TestCase
     /** @test */
     public function it_fails_if_input_is_invalid(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->patchJson("/users/{$this->userToUpdate->id}")
             ->assertJsonValidationErrors([
@@ -152,7 +152,7 @@ class UsersUpdateActionTest extends TestCase
     /** @test */
     public function it_fails_if_email_is_already_registered_to_another_user(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->name,
@@ -166,7 +166,7 @@ class UsersUpdateActionTest extends TestCase
     /** @test */
     public function it_fails_if_vat_number_is_already_registered_to_another_user(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->name,
@@ -181,7 +181,7 @@ class UsersUpdateActionTest extends TestCase
     /** @test */
     public function it_fails_if_customer_id_doesnt_exists(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->name,
@@ -196,7 +196,7 @@ class UsersUpdateActionTest extends TestCase
     /** @test */
     public function it_fails_if_is_self_account(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->patchJson("/users/{$this->systemOperator->id}")
             ->assertForbidden();
@@ -205,7 +205,7 @@ class UsersUpdateActionTest extends TestCase
     /** @test */
     public function it_fails_if_user_sends_customer_id_when_updating_other_users(): void
     {
-        Sanctum::actingAs($this->user);
+        Passport::actingAs($this->user);
 
         $payload = [
             'name' => $this->faker->name,

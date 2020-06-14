@@ -5,10 +5,11 @@ namespace Domains\Users\Tests\Unit;
 use Domains\Users\Casts\PasswordCast;
 use Domains\Customers\Models\Customer;
 use Domains\Users\Models\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Carbon;
-use Laravel\Sanctum\PersonalAccessToken;
+use Laravel\Passport\Token;
 use Tests\TestCase;
 
 class UserModelTest extends TestCase
@@ -55,8 +56,8 @@ class UserModelTest extends TestCase
     /** @test */
     public function it_has_tokens_relation(): void
     {
-        $this->assertInstanceOf(MorphMany::class, $this->model->tokens());
-        $this->assertInstanceOf(PersonalAccessToken::class, $this->model->tokens()->getModel());
+        $this->assertInstanceOf(HasMany::class, $this->model->tokens());
+        $this->assertInstanceOf(Token::class, $this->model->tokens()->getModel());
     }
 
     /** @test */

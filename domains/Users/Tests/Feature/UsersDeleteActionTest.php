@@ -4,7 +4,7 @@ namespace Domains\Users\Tests\Feature;
 
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class UsersDeleteActionTest extends TestCase
@@ -41,7 +41,7 @@ class UsersDeleteActionTest extends TestCase
             ->state('system-operator')
             ->create();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->deleteJson("/users/{$anotherSystemOperator->id}")
             ->assertNoContent();
@@ -54,7 +54,7 @@ class UsersDeleteActionTest extends TestCase
     /** @test */
     public function system_operators_can_delete_other_users(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->deleteJson("/users/{$this->user->id}")
             ->assertNoContent();
@@ -67,7 +67,7 @@ class UsersDeleteActionTest extends TestCase
     /** @test */
     public function it_fails_to_delete_non_existent_users(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->deleteJson('/users/5')
             ->assertNotFound();

@@ -13,7 +13,7 @@ class CustomersStoreAction extends Controller
 
     public function __construct(Customer $customers)
     {
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth');
 
         $this->customers = $customers;
     }

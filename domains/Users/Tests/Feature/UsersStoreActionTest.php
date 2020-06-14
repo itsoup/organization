@@ -7,7 +7,7 @@ use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\Sanctum;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class UsersStoreActionTest extends TestCase
@@ -41,7 +41,7 @@ class UsersStoreActionTest extends TestCase
     /** @test */
     public function system_operators_can_create_new_system_operators(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'customer_id' => null,
@@ -76,7 +76,7 @@ class UsersStoreActionTest extends TestCase
             ->state('user')
             ->create();
 
-        Sanctum::actingAs($user);
+        Passport::actingAs($user);
 
         $payload = [
             'customer_id' => null,
@@ -100,7 +100,7 @@ class UsersStoreActionTest extends TestCase
     {
         $customer = factory(Customer::class)->create();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->name,
@@ -131,7 +131,7 @@ class UsersStoreActionTest extends TestCase
     /** @test */
     public function users_can_create_new_users(): void
     {
-        Sanctum::actingAs($this->user);
+        Passport::actingAs($this->user);
 
         $payload = [
             'name' => $this->faker->name,
@@ -161,7 +161,7 @@ class UsersStoreActionTest extends TestCase
     /** @test */
     public function it_fails_if_user_sends_customer_id_when_creating_other_users(): void
     {
-        Sanctum::actingAs($this->user);
+        Passport::actingAs($this->user);
 
         $payload = [
             'customer_id' => 1,
@@ -182,7 +182,7 @@ class UsersStoreActionTest extends TestCase
     /** @test */
     public function it_fails_if_input_is_invalid(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->postJson('/users')
             ->assertJsonValidationErrors([
@@ -193,7 +193,7 @@ class UsersStoreActionTest extends TestCase
     /** @test */
     public function it_fails_if_email_is_already_registered_to_another_user(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->name,
@@ -208,7 +208,7 @@ class UsersStoreActionTest extends TestCase
     /** @test */
     public function it_fails_if_vat_number_is_already_registered_to_another_user(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->name,
@@ -224,7 +224,7 @@ class UsersStoreActionTest extends TestCase
     /** @test */
     public function it_fails_if_customer_id_doesnt_exists(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->name,

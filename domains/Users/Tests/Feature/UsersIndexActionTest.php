@@ -4,7 +4,7 @@ namespace Domains\Users\Tests\Feature;
 
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class UsersIndexActionTest extends TestCase
@@ -45,7 +45,7 @@ class UsersIndexActionTest extends TestCase
             ->states('user', 'deleted')
             ->create();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->getJson('/users')
             ->assertSuccessful()
@@ -94,7 +94,7 @@ class UsersIndexActionTest extends TestCase
             ->states('user')
             ->create();
 
-        Sanctum::actingAs($this->user);
+        Passport::actingAs($this->user);
 
         $this->getJson('/users')
             ->assertSuccessful()
@@ -130,7 +130,7 @@ class UsersIndexActionTest extends TestCase
     /** @test */
     public function it_doesnt_list_authenticated_user(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->getJson('/users?deleted=true')
             ->assertSuccessful()
@@ -148,7 +148,7 @@ class UsersIndexActionTest extends TestCase
                 'customer_id' => $this->user->customer_id,
             ]);
 
-        Sanctum::actingAs($this->user);
+        Passport::actingAs($this->user);
 
         $this->getJson('/users?deleted=true')
             ->assertSuccessful()
@@ -164,7 +164,7 @@ class UsersIndexActionTest extends TestCase
             ->states('user', 'deleted')
             ->create();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->getJson('/users?deleted=true')
             ->assertSuccessful()
@@ -182,7 +182,7 @@ class UsersIndexActionTest extends TestCase
 
         $customerId = $users->first()->customer_id;
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->getJson("/users?customer={$customerId}")
             ->assertSuccessful()
@@ -201,7 +201,7 @@ class UsersIndexActionTest extends TestCase
             ->states('user')
             ->create();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->getJson('/users?include=customer')
             ->assertSuccessful()
@@ -219,7 +219,7 @@ class UsersIndexActionTest extends TestCase
     {
         factory(User::class, 15)->create();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->getJson('/users?page=2')
             ->assertSuccessful()

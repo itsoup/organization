@@ -5,7 +5,7 @@ namespace Domains\Customers\Tests\Feature;
 use Domains\Customers\Models\Customer;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class CustomersShowActionTest extends TestCase
@@ -40,7 +40,7 @@ class CustomersShowActionTest extends TestCase
             ->state('user')
             ->create();
 
-        Sanctum::actingAs($user);
+        Passport::actingAs($user);
 
         $this->getJson("/customers/{$this->customer->id}")
             ->assertForbidden();
@@ -49,7 +49,7 @@ class CustomersShowActionTest extends TestCase
     /** @test */
     public function it_shows_a_customer(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->getJson("/customers/{$this->customer->id}")
             ->assertSuccessful()
@@ -71,7 +71,7 @@ class CustomersShowActionTest extends TestCase
     /** @test */
     public function it_fails_to_show_non_existent_customers(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->getJson('/customers/2')
             ->assertNotFound();
@@ -82,7 +82,7 @@ class CustomersShowActionTest extends TestCase
     {
         $this->customer->delete();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->getJson("/customers/{$this->customer->id}")
             ->assertSuccessful();

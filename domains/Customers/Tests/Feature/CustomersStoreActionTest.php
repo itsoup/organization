@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Sanctum\Sanctum;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class CustomersStoreActionTest extends TestCase
@@ -40,7 +40,7 @@ class CustomersStoreActionTest extends TestCase
             ->state('user')
             ->create();
 
-        Sanctum::actingAs($user);
+        Passport::actingAs($user);
 
         $this->postJson('/customers')
             ->assertForbidden();
@@ -49,7 +49,7 @@ class CustomersStoreActionTest extends TestCase
     /** @test */
     public function authorized_system_operators_can_store_new_customers(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->company,
@@ -72,7 +72,7 @@ class CustomersStoreActionTest extends TestCase
     /** @test */
     public function it_fails_if_input_is_invalid(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->postJson('/customers')
             ->assertJsonValidationErrors([
@@ -85,7 +85,7 @@ class CustomersStoreActionTest extends TestCase
     {
         Storage::fake();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->company,

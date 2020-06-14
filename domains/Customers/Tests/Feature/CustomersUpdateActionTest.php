@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Sanctum\Sanctum;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class CustomersUpdateActionTest extends TestCase
@@ -44,7 +44,7 @@ class CustomersUpdateActionTest extends TestCase
             ->state('user')
             ->create();
 
-        Sanctum::actingAs($user);
+        Passport::actingAs($user);
 
         $this->patchJson("/customers/{$this->customer->id}")
             ->assertForbidden();
@@ -53,7 +53,7 @@ class CustomersUpdateActionTest extends TestCase
     /** @test */
     public function it_updates_a_customer(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->company,
@@ -77,7 +77,7 @@ class CustomersUpdateActionTest extends TestCase
     /** @test */
     public function it_fails_to_update_non_existent_customers(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->company,
@@ -93,7 +93,7 @@ class CustomersUpdateActionTest extends TestCase
     /** @test */
     public function it_fails_if_input_is_invalid(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $this->patchJson("/customers/{$this->customer->id}")
             ->assertJsonValidationErrors([
@@ -106,7 +106,7 @@ class CustomersUpdateActionTest extends TestCase
     {
         $existingCustomer = factory(Customer::class)->create();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->company,
@@ -124,7 +124,7 @@ class CustomersUpdateActionTest extends TestCase
     /** @test */
     public function it_updates_if_vat_number_is_of_the_self_customer(): void
     {
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->company,
@@ -154,7 +154,7 @@ class CustomersUpdateActionTest extends TestCase
         $this->customer->logo = $existingLogo = UploadedFile::fake()->image('logo.png')->store('customers');
         $this->customer->save();
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->company,
@@ -185,7 +185,7 @@ class CustomersUpdateActionTest extends TestCase
             'logo' => UploadedFile::fake()->image('logo.png')->store('customers'),
         ]);
 
-        Sanctum::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->company,
