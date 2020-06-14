@@ -35,9 +35,9 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        run: |
-          composer install --no-interaction --no-suggest
-          php artisan passport:keys --no-interaction
+        run: composer install --no-interaction --no-suggest
 
       - name: Execute tests
-        run: vendor/bin/phpunit --testdox
+        run: |
+          php artisan passport:keys --no-interaction
+          vendor/bin/phpunit --testdox
