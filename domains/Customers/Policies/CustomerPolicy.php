@@ -28,16 +28,6 @@ class CustomerPolicy
         return false;
     }
 
-    public function create(): bool
-    {
-        return false;
-    }
-
-    public function update(): bool
-    {
-        return false;
-    }
-
     public function delete(): bool
     {
         return false;

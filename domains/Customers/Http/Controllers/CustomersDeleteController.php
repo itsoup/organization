@@ -19,9 +19,11 @@ class CustomersDeleteController extends Controller
 
     public function __invoke(int $customerId)
     {
-        $this->authorize('delete', $this->customers);
+        $resource = $this->customers->findOrFail($customerId);
 
-        $this->customers->findOrFail($customerId)->delete();
+        $this->authorize('delete', $resource);
+
+        $resource->delete();
 
         return new Response('', Response::HTTP_NO_CONTENT);
     }
