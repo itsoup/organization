@@ -28,6 +28,6 @@ class UsersStoreController extends Controller
             'password' => $request->input('password'),
         ]);
 
-        return Response::create('', Response::HTTP_CREATED);
+        return new Response('', Response::HTTP_CREATED);
     }
 }

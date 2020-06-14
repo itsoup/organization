@@ -28,6 +28,6 @@ class CustomersStoreController extends Controller
             'logo' => $request->hasFile('logo') ? $request->file('logo')->store('customers') : null,
         ]);
 
-        return Response::create('', Response::HTTP_CREATED);
+        return new Response('', Response::HTTP_CREATED);
     }
 }

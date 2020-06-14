@@ -23,6 +23,6 @@ class CustomersDeleteController extends Controller
 
         $this->customers->findOrFail($customerId)->delete();
 
-        return Response::create('', Response::HTTP_NO_CONTENT);
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 }
