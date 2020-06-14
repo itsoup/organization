@@ -25,9 +25,7 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v1
         with:
-          path: |
-            ~/.composer/cache/files
-            storage/oauth-*
+          path: ~/.composer/cache/files
           key: dependencies-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
 
       - name: Setup PHP
@@ -42,4 +40,6 @@ jobs:
           php artisan passport:keys --no-interaction
 
       - name: Execute tests
-        run: vendor/bin/phpunit --testdox
+        run: |
+          php artisan passport:keys
+          vendor/bin/phpunit --testdox
