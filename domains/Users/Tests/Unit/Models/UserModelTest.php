@@ -2,6 +2,7 @@
 
 namespace Domains\Users\Tests\Unit\Models;
 
+use Domains\Roles\Models\Role;
 use Domains\Users\Casts\PasswordCast;
 use Domains\Customers\Models\Customer;
 use Domains\Users\Models\User;
@@ -86,5 +87,11 @@ class UserModelTest extends TestCase
     public function it_has_custom_password_cast(): void
     {
         $this->assertTrue($this->model->hasCast('password', strtolower(PasswordCast::class)));
+    }
+
+    /** @test */
+    public function it_has_many_roles(): void
+    {
+        $this->assertInstanceOf(Role::class, $this->model->roles()->getModel());
     }
 }

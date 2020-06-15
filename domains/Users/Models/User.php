@@ -3,9 +3,11 @@
 namespace Domains\Users\Models;
 
 use Domains\Customers\Models\Customer;
+use Domains\Roles\Models\Role;
 use Domains\Users\Casts\PasswordCast;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -85,5 +87,10 @@ class User extends Authenticatable implements UserEntityInterface
         }
 
         return 'user';
+    }
+
+    public function roles(): HasMany
+    {
+        return $this->hasMany(Role::class);
     }
 }

@@ -179,6 +179,7 @@ return [
          * Domains Service Providers...
          */
         Domains\Customers\CustomersServiceProvider::class,
+        Domains\Roles\RolesServiceProvider::class,
         Domains\Users\UsersServiceProvider::class,
 
     ],
