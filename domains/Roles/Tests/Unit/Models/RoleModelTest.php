@@ -2,6 +2,7 @@
 
 namespace Domains\Roles\Tests\Unit\Models;
 
+use Domains\Customers\Models\Customer;
 use Domains\Roles\Models\Role;
 use Domains\Users\Models\User;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -64,8 +65,14 @@ class RoleModelTest extends TestCase
     }
 
     /** @test */
-    public function it_belongs_to_many_users(): void
+    public function it_has_users_relation(): void
     {
         $this->assertInstanceOf(User::class, $this->model->users()->getModel());
+    }
+
+    /** @test */
+    public function it_has_customer_relation(): void
+    {
+        $this->assertInstanceOf(Customer::class, $this->model->customer()->getModel());
     }
 }

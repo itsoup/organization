@@ -19,3 +19,7 @@ $factory->define(Role::class, static fn(\Faker\Generator $faker) => [
     'updated_at' => now(),
     'deleted_at' => null,
 ]);
+
+$factory->state(Role::class, 'deleted', [
+    'deleted_at' => now(),
+]);
