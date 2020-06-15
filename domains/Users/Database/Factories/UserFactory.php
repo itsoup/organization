@@ -19,7 +19,7 @@ $factory->define(User::class, static fn (\Faker\Generator $faker) => [
     'deleted_at' => null,
 ]);
 
-$factory->state(User::class, 'system-operator', static fn () => [
+$factory->state(User::class, 'system-operator', [
     'customer_id' => null,
 ]);
 
@@ -27,6 +27,6 @@ $factory->state(User::class, 'user', static fn () => [
     'customer_id' => static fn () => factory(Customer::class)->create(),
 ]);
 
-$factory->state(User::class, 'deleted', static fn () => [
+$factory->state(User::class, 'deleted', [
     'deleted_at' => now(),
 ]);

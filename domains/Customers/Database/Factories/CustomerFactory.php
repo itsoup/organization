@@ -14,6 +14,6 @@ $factory->define(Customer::class, static fn (\Faker\Generator $faker) => [
     'deleted_at' => null,
 ]);
 
-$factory->state(Customer::class, 'deleted', static fn () => [
+$factory->state(Customer::class, 'deleted', [
     'deleted_at' => now(),
 ]);
