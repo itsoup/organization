@@ -5,7 +5,7 @@
 ## Quick review
 
 * Aggregators for Customers’ information.
-* Authorization and authentication of Users, via Roles and Permissions.
+* Authorization and authentication of Users, via Roles and Scopes.
 
 For more detailed information, check the corresponding [documentation Wiki section](https://github.com/itsoup/documentation/wiki/Organization).
 
