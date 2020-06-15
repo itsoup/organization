@@ -10,7 +10,12 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', static function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->nullable()->index();
+
+            $table->foreignId('customer_id')
+                ->nullable()
+                ->index()
+                ->constrained();
+
             $table->string('vat_number')->nullable()->unique();
             $table->string('name')->index();
             $table->string('email')->unique();
