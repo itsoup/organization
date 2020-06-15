@@ -36,7 +36,7 @@ class UserUpdateRequest extends FormRequest
             ],
             'vat_number' => [
                 'sometimes',
-                'unique:users',
+                'unique:users,vat_number,' . $this->route('userId'),
             ],
         ];
     }

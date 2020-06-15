@@ -178,6 +178,21 @@ class UsersUpdateControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_updates_with_existent_vat_number_if_is_of_the_requested_user(): void
+    {
+        Passport::actingAs($this->systemOperator);
+
+        $payload = [
+            'name' => $this->faker->name,
+            'email' => $this->faker->email,
+            'vat_number' => $this->userToUpdate->vat_number,
+        ];
+
+        $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
+            ->assertNoContent();
+    }
+
+    /** @test */
     public function it_fails_if_vat_number_is_already_registered_to_another_user(): void
     {
         Passport::actingAs($this->systemOperator);
