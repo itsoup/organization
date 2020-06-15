@@ -90,7 +90,7 @@ class UserModelTest extends TestCase
     }
 
     /** @test */
-    public function it_has_many_roles(): void
+    public function it_has_roles_relation(): void
     {
         $this->assertInstanceOf(Role::class, $this->model->roles()->getModel());
     }
