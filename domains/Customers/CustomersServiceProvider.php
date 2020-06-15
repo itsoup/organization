@@ -23,6 +23,7 @@ class CustomersServiceProvider extends ServiceProvider
 
         $this->bootPolicies();
     }
+
     private function bootRoutes(): void
     {
         Route::middleware('api')
