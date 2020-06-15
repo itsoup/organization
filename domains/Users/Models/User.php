@@ -28,7 +28,8 @@ class User extends Authenticatable implements UserEntityInterface
     ];
 
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     protected $casts = [
@@ -75,5 +76,14 @@ class User extends Authenticatable implements UserEntityInterface
     public function getIdentifier()
     {
         return $this->getAuthIdentifier();
+    }
+
+    public function getAccountTypeAttribute(): string
+    {
+        if ($this->isSystemOperator()) {
+            return 'system-operator';
+        }
+
+        return 'user';
     }
 }

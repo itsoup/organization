@@ -39,6 +39,7 @@ class UserAccessToken extends PassportAccessToken
             ->withClaim('vat_number', $this->user->vat_number)
             ->withClaim('name', $this->user->name)
             ->withClaim('email', $this->user->email)
+            ->withClaim('account_type', $this->user->account_type)
             ->getToken(new Sha256(), new Key($privateKey->getKeyPath(), $privateKey->getPassPhrase()));
     }
 }
