@@ -23,6 +23,11 @@ class UserPolicy
         return true;
     }
 
+    public function view(): bool
+    {
+        return true;
+    }
+
     public function create(User $authenticatedUser, bool $requestMissingCustomerId): bool
     {
         return $authenticatedUser->isSystemOperator()
