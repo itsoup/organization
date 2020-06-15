@@ -56,7 +56,7 @@ class AccessTokenControllerIssueTokenTest extends TestCase
 
         $this->assertEquals($this->user->id, $decodedJwt->getClaim('sub'));
         $this->assertEquals($this->user->customer_id, $decodedJwt->getClaim('customer_id'));
-        $this->assertEquals($this->user->vat, $decodedJwt->getClaim('vat'));
+        $this->assertEquals($this->user->vat_number, $decodedJwt->getClaim('vat_number'));
         $this->assertEquals($this->user->name, $decodedJwt->getClaim('name'));
         $this->assertEquals($this->user->email, $decodedJwt->getClaim('email'));
     }
