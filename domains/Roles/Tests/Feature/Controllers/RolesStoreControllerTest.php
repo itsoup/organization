@@ -13,11 +13,16 @@ class RolesStoreControllerTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
+    private User $systemOperator;
     private User $user;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->systemOperator = factory(User::class)
+            ->state('system-operator')
+            ->create();
 
         $this->user = factory(User::class)
             ->state('user')
@@ -43,7 +48,7 @@ class RolesStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_stores_new_resource(): void
+    public function users_can_store_new_resources(): void
     {
         Passport::actingAs($this->user);
 
@@ -60,6 +65,29 @@ class RolesStoreControllerTest extends TestCase
 
         $this->assertDatabaseHas('roles', [
             'customer_id' => $this->user->customer_id,
+            'name' => $attributes['name'],
+            'scopes' => json_encode($attributes['scopes']),
+        ]);
+    }
+
+    /** @test */
+    public function system_operators_can_store_new_resources(): void
+    {
+        Passport::actingAs($this->systemOperator);
+
+        $attributes = [
+            'name' => $this->faker->name,
+            'scopes' => [
+                'organization:roles:view',
+                'organization:roles:manage',
+            ],
+        ];
+
+        $this->postJson('/roles', $attributes)
+            ->assertNoContent();
+
+        $this->assertDatabaseHas('roles', [
+            'customer_id' => $this->systemOperator->customer_id,
             'name' => $attributes['name'],
             'scopes' => json_encode($attributes['scopes']),
         ]);

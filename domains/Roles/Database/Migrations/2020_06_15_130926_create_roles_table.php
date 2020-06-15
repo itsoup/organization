@@ -10,7 +10,7 @@ class CreateRolesTable extends Migration
     {
         Schema::create('roles', static function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->index();
+            $table->foreignId('customer_id')->nullable()->index();
             $table->string('name');
             $table->jsonb('scopes');
             $table->timestamps();
