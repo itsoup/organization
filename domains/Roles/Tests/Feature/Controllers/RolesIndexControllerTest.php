@@ -86,7 +86,7 @@ class RolesIndexControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_lists_resources_related_with_nullable_customer_id(): void
+    public function it_lists_resources_related_with_system_operators_customer_id(): void
     {
         $systemOperator = factory(User::class)
             ->state('system-operator')
