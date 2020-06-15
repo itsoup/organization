@@ -63,11 +63,6 @@ class UsersShowControllerTest extends TestCase
             ->assertJson([
                 'data' => [
                     'id' => $anotherSystemOperator->id,
-                    'customer_id' => $anotherSystemOperator->customer_id,
-                    'vat_number' => $anotherSystemOperator->vat_number,
-                    'name' => $anotherSystemOperator->name,
-                    'email' => $anotherSystemOperator->email,
-                    'phone' => $anotherSystemOperator->phone,
                 ]
             ]);
     }
@@ -77,7 +72,48 @@ class UsersShowControllerTest extends TestCase
     {
         Passport::actingAs($this->systemOperator);
 
-        $this->getJson("/users/3")
+        $this->getJson('/users/3')
             ->assertNotFound();
+    }
+
+    /** @test */
+    public function users_can_view_details_of_users_of_their_customer(): void
+    {
+        $userFromSameCustomer = factory(User::class)
+            ->state('user')
+            ->create([
+                'customer_id' => $this->user->customer_id,
+            ]);
+
+        Passport::actingAs($this->user);
+
+        $this->getJson("/users/{$userFromSameCustomer->id}")
+            ->assertOk()
+            ->assertExactJson([
+                'data' => [
+                    'id' => $userFromSameCustomer->id,
+                    'customer_id' => $userFromSameCustomer->customer_id,
+                    'vat_number' => $userFromSameCustomer->vat_number,
+                    'name' => $userFromSameCustomer->name,
+                    'email' => $userFromSameCustomer->email,
+                    'phone' => $userFromSameCustomer->phone,
+                    'created_at' => $userFromSameCustomer->created_at,
+                    'updated_at' => $userFromSameCustomer->updated_at,
+                    'deleted_at' => $userFromSameCustomer->deleted_at,
+                ]
+            ]);
+    }
+
+    /** @test */
+    public function users_cant_view_details_of_users_of_other_customers(): void
+    {
+        $userFromAnotherCustomer = factory(User::class)
+            ->state('user')
+            ->create();
+
+        Passport::actingAs($this->user);
+
+        $this->getJson("/users/{$userFromAnotherCustomer->id}")
+            ->assertForbidden();
     }
 }

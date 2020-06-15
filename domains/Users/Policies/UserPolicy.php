@@ -23,9 +23,9 @@ class UserPolicy
         return true;
     }
 
-    public function view(): bool
+    public function view(User $authenticatedUser, User $resource): bool
     {
-        return true;
+        return $authenticatedUser->customer_id === $resource->customer_id;
     }
 
     public function create(User $authenticatedUser, bool $requestMissingCustomerId): bool
