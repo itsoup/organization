@@ -25,7 +25,7 @@ class UserUpdateRequest extends FormRequest
                 'string',
             ],
             'email' => [
-                'required',
+                'filled',
                 'email',
                 'unique:users',
             ],

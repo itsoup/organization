@@ -145,7 +145,7 @@ class UsersUpdateControllerTest extends TestCase
 
         $this->patchJson("/users/{$this->userToUpdate->id}")
             ->assertJsonValidationErrors([
-                'name', 'email',
+                'name',
             ]);
     }
 
@@ -157,6 +157,20 @@ class UsersUpdateControllerTest extends TestCase
         $payload = [
             'name' => $this->faker->name,
             'email' => $this->systemOperator->email,
+        ];
+
+        $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
+            ->assertJsonValidationErrors(['email']);
+    }
+
+    /** @test */
+    public function it_fails_if_email_is_sent_empty(): void
+    {
+        Passport::actingAs($this->systemOperator);
+
+        $payload = [
+            'name' => $this->faker->name,
+            'email' => '',
         ];
 
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
