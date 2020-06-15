@@ -55,7 +55,7 @@ class UsersShowControllerTest extends TestCase
         Passport::actingAs($this->systemOperator);
 
         $this->getJson("/users/{$this->user->id}?include=customer")
-            ->assertSuccessful()
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     'customer',

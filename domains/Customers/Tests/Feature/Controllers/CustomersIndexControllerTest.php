@@ -53,7 +53,7 @@ class CustomersIndexControllerTest extends TestCase
         Passport::actingAs($this->systemOperator);
 
         $this->getJson('/customers')
-            ->assertSuccessful()
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
@@ -85,7 +85,7 @@ class CustomersIndexControllerTest extends TestCase
         Passport::actingAs($this->systemOperator);
 
         $this->getJson('/customers?deleted=true')
-            ->assertSuccessful()
+            ->assertOk()
             ->assertJsonFragment([
                 'id' => $deletedCustomer->id,
             ]);
@@ -99,7 +99,7 @@ class CustomersIndexControllerTest extends TestCase
         Passport::actingAs($this->systemOperator);
 
         $this->getJson('/customers?page=2')
-            ->assertSuccessful()
+            ->assertOk()
             ->assertJson([
                 'meta' => [
                     'current_page' => 2,

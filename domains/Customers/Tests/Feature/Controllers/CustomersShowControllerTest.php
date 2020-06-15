@@ -52,7 +52,7 @@ class CustomersShowControllerTest extends TestCase
         Passport::actingAs($this->systemOperator);
 
         $this->getJson("/customers/{$this->customer->id}")
-            ->assertSuccessful()
+            ->assertOk()
             ->assertExactJson([
                 'data' => [
                     'id' => $this->customer->id,
@@ -85,6 +85,6 @@ class CustomersShowControllerTest extends TestCase
         Passport::actingAs($this->systemOperator);
 
         $this->getJson("/customers/{$this->customer->id}")
-            ->assertSuccessful();
+            ->assertOk();
     }
 }

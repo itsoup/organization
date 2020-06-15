@@ -48,7 +48,7 @@ class UsersIndexControllerTest extends TestCase
         Passport::actingAs($this->systemOperator);
 
         $this->getJson('/users')
-            ->assertSuccessful()
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
@@ -97,7 +97,7 @@ class UsersIndexControllerTest extends TestCase
         Passport::actingAs($this->user);
 
         $this->getJson('/users')
-            ->assertSuccessful()
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
@@ -133,7 +133,7 @@ class UsersIndexControllerTest extends TestCase
         Passport::actingAs($this->systemOperator);
 
         $this->getJson('/users?deleted=true')
-            ->assertSuccessful()
+            ->assertOk()
             ->assertJsonMissing([
                 'id' => $this->systemOperator->id,
             ]);
@@ -151,7 +151,7 @@ class UsersIndexControllerTest extends TestCase
         Passport::actingAs($this->user);
 
         $this->getJson('/users?deleted=true')
-            ->assertSuccessful()
+            ->assertOk()
             ->assertJsonFragment([
                 'id' => $deletedUser->id,
             ]);
@@ -167,7 +167,7 @@ class UsersIndexControllerTest extends TestCase
         Passport::actingAs($this->systemOperator);
 
         $this->getJson('/users?deleted=true')
-            ->assertSuccessful()
+            ->assertOk()
             ->assertJsonFragment([
                 'id' => $deletedUser->id,
             ]);
@@ -185,7 +185,7 @@ class UsersIndexControllerTest extends TestCase
         Passport::actingAs($this->systemOperator);
 
         $this->getJson("/users?customer={$customerId}")
-            ->assertSuccessful()
+            ->assertOk()
             ->assertJsonFragment([
                 'id' => $users->first()->id,
             ])
@@ -204,7 +204,7 @@ class UsersIndexControllerTest extends TestCase
         Passport::actingAs($this->systemOperator);
 
         $this->getJson('/users?include=customer')
-            ->assertSuccessful()
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
@@ -222,7 +222,7 @@ class UsersIndexControllerTest extends TestCase
         Passport::actingAs($this->systemOperator);
 
         $this->getJson('/users?page=2')
-            ->assertSuccessful()
+            ->assertOk()
             ->assertJson([
                 'meta' => [
                     'current_page' => 2,

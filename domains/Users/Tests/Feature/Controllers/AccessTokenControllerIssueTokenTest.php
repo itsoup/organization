@@ -49,7 +49,7 @@ class AccessTokenControllerIssueTokenTest extends TestCase
             'password' => 'secret',
             'scopes' => '*',
         ])
-            ->assertSuccessful()
+            ->assertOk()
             ->decodeResponseJson('access_token');
 
         $decodedJwt = (new Parser())->parse($accessToken);
