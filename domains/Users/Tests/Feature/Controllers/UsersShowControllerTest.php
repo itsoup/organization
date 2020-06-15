@@ -50,6 +50,20 @@ class UsersShowControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_includes_customer_information_if_requested(): void
+    {
+        Passport::actingAs($this->systemOperator);
+
+        $this->getJson("/users/{$this->user->id}?include=customer")
+            ->assertSuccessful()
+            ->assertJsonStructure([
+                'data' => [
+                    'customer',
+                ],
+            ]);
+    }
+
+    /** @test */
     public function system_operators_can_view_details_of_other_system_operators(): void
     {
         $anotherSystemOperator = factory(User::class)
