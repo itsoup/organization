@@ -48,7 +48,7 @@ class RolesStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function users_can_store_new_resources(): void
+    public function users_can_store_new_resources_automatically_associated_with_their_customer_id(): void
     {
         Passport::actingAs($this->user);
 
@@ -71,7 +71,7 @@ class RolesStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function system_operators_can_store_new_resources(): void
+    public function system_operators_can_store_new_resources_automatically_associated_with_their_customer_id(): void
     {
         Passport::actingAs($this->systemOperator);
 
