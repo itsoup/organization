@@ -84,6 +84,26 @@ class UsersUpdateControllerTest extends TestCase
     }
 
     /** @test */
+    public function users_cant_update_other_users_from_other_customers(): void
+    {
+        $userFromAnotherCustomer = factory(User::class)
+            ->state('user')
+            ->create();
+
+        Passport::actingAs($this->user);
+
+        $payload = [
+            'name' => $this->faker->name,
+            'email' => $this->faker->safeEmail,
+            'vat_number' => $this->faker->countryCode . $this->faker->randomNumber(9),
+            'phone' => $this->faker->e164PhoneNumber,
+        ];
+
+        $this->patchJson("/users/{$userFromAnotherCustomer->id}", $payload)
+            ->assertNotFound();
+    }
+
+    /** @test */
     public function users_cant_update_customer_id(): void
     {
         $anotherCustomer = factory(Customer::class)->create();
