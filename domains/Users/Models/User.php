@@ -65,13 +65,6 @@ class User extends Authenticatable implements UserEntityInterface
         return $this->belongsTo(Customer::class);
     }
 
-    public function revokePreviousTokens(string $name): void
-    {
-        $this->tokens()
-            ->where('name', $name)
-            ->delete();
-    }
-
     /**
      * @return mixed
      */

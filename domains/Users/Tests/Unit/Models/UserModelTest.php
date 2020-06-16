@@ -21,7 +21,9 @@ class UserModelTest extends TestCase
     {
         parent::setUp();
 
-        $this->model = factory(User::class)->make();
+        $this->model = factory(User::class)->make([
+            'id' => 1,
+        ]);
     }
 
     /** @test */
@@ -73,6 +75,7 @@ class UserModelTest extends TestCase
         $this->model->customer_id = null;
 
         $this->assertTrue($this->model->isSystemOperator());
+        $this->assertEquals('system-operator', $this->model->account_type);
     }
 
     /** @test */
@@ -81,6 +84,7 @@ class UserModelTest extends TestCase
         $this->model->customer_id = 1;
 
         $this->assertTrue($this->model->isUser());
+        $this->assertEquals('user', $this->model->account_type);
     }
 
     /** @test */
@@ -93,5 +97,11 @@ class UserModelTest extends TestCase
     public function it_has_roles_relation(): void
     {
         $this->assertInstanceOf(Role::class, $this->model->roles()->getModel());
+    }
+
+    /** @test */
+    public function it_gets_correct_identifier(): void
+    {
+        $this->assertEquals($this->model->id, $this->model->getIdentifier());
     }
 }
