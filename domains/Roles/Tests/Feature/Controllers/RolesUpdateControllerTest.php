@@ -21,7 +21,9 @@ class RolesUpdateControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
+        $this->user = factory(User::class)
+            ->state('user')
+            ->create();
 
         $this->role = factory(Role::class)->create([
             'customer_id' => $this->user->customer_id,
@@ -81,7 +83,25 @@ class RolesUpdateControllerTest extends TestCase
 
         Passport::actingAs($this->user);
 
-        $this->patchJson("/roles/3", $attributes)
+        $this->patchJson('/roles/3', $attributes)
+            ->assertNotFound();
+    }
+
+    /** @test */
+    public function it_fails_to_update_resources_of_other_customers(): void
+    {
+        $otherCustomerRole = factory(Role::class)->create();
+
+        $attributes = [
+            'name' => $this->faker->word,
+            'scopes' => [
+                'organization:roles:view',
+            ],
+        ];
+
+        Passport::actingAs($this->user);
+
+        $this->patchJson("/roles/{$otherCustomerRole->id}", $attributes)
             ->assertNotFound();
     }
 }

@@ -20,7 +20,9 @@ class RolesUpdateController extends Controller
 
     public function __invoke(RoleUpdateRequest $request, int $roleId): Response
     {
-        $resource = $this->roles->findOrFail($roleId);
+        $resource = $this->roles
+            ->customerId($request->user()->customer_id)
+            ->findOrFail($roleId);
 
         $resource->update([
             'name' => $request->input('name'),

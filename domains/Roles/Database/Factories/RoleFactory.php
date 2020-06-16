@@ -1,11 +1,12 @@
 <?php
 
 
+use Domains\Customers\Models\Customer;
 use Domains\Roles\Models\Role;
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(Role::class, static fn(\Faker\Generator $faker) => [
-    'customer_id' => null,
+    'customer_id' => static fn() => factory(Customer::class)->create(),
     'name' => $faker->word,
     'scopes' => [
         'organization:customers:view',

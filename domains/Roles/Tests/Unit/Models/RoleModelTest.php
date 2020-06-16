@@ -17,7 +17,9 @@ class RoleModelTest extends TestCase
     {
         parent::setUp();
 
-        $this->model = factory(Role::class)->make();
+        $this->model = factory(Role::class)->make([
+            'customer_id' => null,
+        ]);
     }
 
     /** @test */
