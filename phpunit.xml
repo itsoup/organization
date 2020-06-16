@@ -19,6 +19,7 @@
 
             <exclude>
                 <directory suffix=".php">./domains/*/Database</directory>
+                <directory suffix=".php">./domains/*/Routes</directory>
                 <directory suffix=".php">./domains/*/Tests</directory>
                 <directory suffix=".php">./tests</directory>
             </exclude>
