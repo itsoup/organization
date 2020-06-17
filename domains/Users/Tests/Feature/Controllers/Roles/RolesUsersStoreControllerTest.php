@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
-class UsersRolesStoreControllerTest extends TestCase
+class RolesUsersStoreControllerTest extends TestCase
 {
     use RefreshDatabase;
 
