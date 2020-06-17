@@ -12,6 +12,7 @@ class UsersRolesStoreControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $systemOperator;
     private User $user;
     private User $userToHandle;
     private Role $role;
@@ -19,6 +20,10 @@ class UsersRolesStoreControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->systemOperator = factory(User::class)
+            ->state('system-operator')
+            ->create();
 
         $this->user = factory(User::class)
             ->state('user')
@@ -54,7 +59,7 @@ class UsersRolesStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_attaches_roles(): void
+    public function it_attaches_roles_to_users(): void
     {
         $payload = [
             'roles' => [
@@ -70,6 +75,34 @@ class UsersRolesStoreControllerTest extends TestCase
         $this->assertDatabaseHas('role_user', [
             'user_id' => $this->userToHandle->id,
             'role_id' => $this->role->id,
+        ]);
+    }
+
+    /** @test */
+    public function it_attaches_roles_to_system_operators(): void
+    {
+        $systemOperatorToHandle = factory(User::class)
+            ->state('system-operator')
+            ->create();
+
+        $role = factory(Role::class)->create([
+            'customer_id' => $systemOperatorToHandle->customer_id,
+        ]);
+
+        $payload = [
+            'roles' => [
+                $role->id,
+            ],
+        ];
+
+        Passport::actingAs($this->systemOperator);
+
+        $this->putJson("/users/{$systemOperatorToHandle->id}/roles", $payload)
+            ->assertNoContent();
+
+        $this->assertDatabaseHas('role_user', [
+            'user_id' => $systemOperatorToHandle->id,
+            'role_id' => $role->id,
         ]);
     }
 
@@ -103,7 +136,7 @@ class UsersRolesStoreControllerTest extends TestCase
 
         Passport::actingAs($this->user);
 
-        $this->putJson('/users/3/roles', $payload)
+        $this->putJson('/users/4/roles', $payload)
             ->assertNotFound();
     }
 

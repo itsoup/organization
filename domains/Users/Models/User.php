@@ -50,6 +50,11 @@ class User extends Authenticatable implements UserEntityInterface
         return $query->where('customer_id', $customerId);
     }
 
+    public function scopeSystemOperators(Builder $query): Builder
+    {
+        return $query->whereNull('customer_id');
+    }
+
     public function isSystemOperator(): bool
     {
         return $this->customer_id === null;
