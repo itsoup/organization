@@ -15,6 +15,7 @@ class Role extends Model
     use SoftDeletes;
 
     protected $casts = [
+        'customer_id' => 'int',
         'scopes' => 'array',
     ];
 
