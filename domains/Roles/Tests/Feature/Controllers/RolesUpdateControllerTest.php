@@ -51,7 +51,7 @@ class RolesUpdateControllerTest extends TestCase
     /** @test */
     public function it_updates_a_resource(): void
     {
-        $attributes = [
+        $payload = [
             'name' => $this->faker->word,
             'scopes' => [
                 'organization:roles:view',
@@ -60,21 +60,21 @@ class RolesUpdateControllerTest extends TestCase
 
         Passport::actingAs($this->user);
 
-        $this->patchJson("/roles/{$this->role->id}", $attributes)
+        $this->patchJson("/roles/{$this->role->id}", $payload)
             ->assertNoContent();
 
         $this->assertDatabaseHas('roles', [
             'id' => $this->role->id,
             'customer_id' => $this->user->customer_id,
-            'name' => $attributes['name'],
-            'scopes' => json_encode($attributes['scopes']),
+            'name' => $payload['name'],
+            'scopes' => json_encode($payload['scopes']),
         ]);
     }
 
     /** @test */
     public function it_fails_to_update_non_existent_resources(): void
     {
-        $attributes = [
+        $payload = [
             'name' => $this->faker->word,
             'scopes' => [
                 'organization:roles:view',
@@ -83,7 +83,7 @@ class RolesUpdateControllerTest extends TestCase
 
         Passport::actingAs($this->user);
 
-        $this->patchJson('/roles/3', $attributes)
+        $this->patchJson('/roles/3', $payload)
             ->assertNotFound();
     }
 
@@ -92,7 +92,7 @@ class RolesUpdateControllerTest extends TestCase
     {
         $otherCustomerRole = factory(Role::class)->create();
 
-        $attributes = [
+        $payload = [
             'name' => $this->faker->word,
             'scopes' => [
                 'organization:roles:view',
@@ -101,7 +101,7 @@ class RolesUpdateControllerTest extends TestCase
 
         Passport::actingAs($this->user);
 
-        $this->patchJson("/roles/{$otherCustomerRole->id}", $attributes)
+        $this->patchJson("/roles/{$otherCustomerRole->id}", $payload)
             ->assertNotFound();
     }
 }

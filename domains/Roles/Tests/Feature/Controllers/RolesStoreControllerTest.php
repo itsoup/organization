@@ -52,7 +52,7 @@ class RolesStoreControllerTest extends TestCase
     {
         Passport::actingAs($this->user);
 
-        $attributes = [
+        $payload = [
             'name' => $this->faker->name,
             'scopes' => [
                 'organization:roles:view',
@@ -60,13 +60,13 @@ class RolesStoreControllerTest extends TestCase
             ],
         ];
 
-        $this->postJson('/roles', $attributes)
+        $this->postJson('/roles', $payload)
             ->assertNoContent();
 
         $this->assertDatabaseHas('roles', [
             'customer_id' => $this->user->customer_id,
-            'name' => $attributes['name'],
-            'scopes' => json_encode($attributes['scopes']),
+            'name' => $payload['name'],
+            'scopes' => json_encode($payload['scopes']),
         ]);
     }
 
@@ -75,7 +75,7 @@ class RolesStoreControllerTest extends TestCase
     {
         Passport::actingAs($this->systemOperator);
 
-        $attributes = [
+        $payload = [
             'name' => $this->faker->name,
             'scopes' => [
                 'organization:roles:view',
@@ -83,13 +83,13 @@ class RolesStoreControllerTest extends TestCase
             ],
         ];
 
-        $this->postJson('/roles', $attributes)
+        $this->postJson('/roles', $payload)
             ->assertNoContent();
 
         $this->assertDatabaseHas('roles', [
             'customer_id' => $this->systemOperator->customer_id,
-            'name' => $attributes['name'],
-            'scopes' => json_encode($attributes['scopes']),
+            'name' => $payload['name'],
+            'scopes' => json_encode($payload['scopes']),
         ]);
     }
 }
