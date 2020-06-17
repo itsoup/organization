@@ -12,7 +12,7 @@ class UserUpdateRequest extends FormRequest
         return $this->user()
             ->can('update', [
                 User::class,
-                $this->route('userId'),
+                (int) $this->route('userId'),
                 $this->missing('customer_id'),
             ]);
     }
