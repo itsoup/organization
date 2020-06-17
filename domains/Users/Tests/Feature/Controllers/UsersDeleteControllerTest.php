@@ -106,4 +106,13 @@ class UsersDeleteControllerTest extends TestCase
 
         $this->assertFalse($userToDelete->fresh()->trashed());
     }
+
+    /** @test */
+    public function users_cant_delete_themselves(): void
+    {
+        Passport::actingAs($this->user);
+
+        $this->deleteJson("users/{$this->user->id}")
+            ->assertForbidden();
+    }
 }

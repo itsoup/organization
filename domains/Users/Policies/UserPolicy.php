@@ -47,6 +47,7 @@ class UserPolicy
 
     public function delete(User $authenticatedUser, User $resource): bool
     {
-        return $authenticatedUser->customer_id === $resource->customer_id;
+        return $authenticatedUser->isNot($resource)
+            && $authenticatedUser->customer_id === $resource->customer_id;
     }
 }
