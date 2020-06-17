@@ -7,7 +7,7 @@ use Domains\Roles\Models\Role;
 use Domains\Users\Casts\PasswordCast;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -82,8 +82,8 @@ class User extends Authenticatable implements UserEntityInterface
         return 'user';
     }
 
-    public function roles(): HasMany
+    public function roles(): BelongsToMany
     {
-        return $this->hasMany(Role::class);
+        return $this->belongsToMany(Role::class);
     }
 }
