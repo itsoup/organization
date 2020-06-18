@@ -49,7 +49,9 @@ class CustomersShowControllerTest extends TestCase
     /** @test */
     public function it_shows_a_customer(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+        ]);
 
         $this->getJson("/customers/{$this->customer->id}")
             ->assertOk()
@@ -82,7 +84,9 @@ class CustomersShowControllerTest extends TestCase
     {
         $this->customer->delete();
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+        ]);
 
         $this->getJson("/customers/{$this->customer->id}")
             ->assertOk();

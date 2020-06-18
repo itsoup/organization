@@ -50,7 +50,9 @@ class CustomersIndexControllerTest extends TestCase
     {
         $deletedCustomer = factory(Customer::class)->state('deleted')->create();
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+        ]);
 
         $this->getJson('/customers')
             ->assertOk()
@@ -82,7 +84,9 @@ class CustomersIndexControllerTest extends TestCase
     {
         $deletedCustomer = factory(Customer::class)->state('deleted')->create();
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+        ]);
 
         $this->getJson('/customers?deleted=true')
             ->assertOk()
@@ -96,7 +100,9 @@ class CustomersIndexControllerTest extends TestCase
     {
         factory(Customer::class, 15)->create();
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+        ]);
 
         $this->getJson('/customers?page=2')
             ->assertOk()

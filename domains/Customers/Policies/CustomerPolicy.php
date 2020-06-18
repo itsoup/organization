@@ -9,10 +9,12 @@ class CustomerPolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $authenticatedUser, string $ability): ?bool
+    public function before(User $authenticatedUser): ?bool
     {
-        if ($authenticatedUser->isSystemOperator()) {
-            return true;
+        if (! $authenticatedUser->isSystemOperator()
+            || ! $authenticatedUser->tokenCan('organization:customers:view')
+        ) {
+            return false;
         }
 
         return null;
@@ -20,26 +22,26 @@ class CustomerPolicy
 
     public function viewAny(): bool
     {
-        return false;
+        return true;
     }
 
     public function view(): bool
     {
-        return false;
+        return true;
     }
 
-    public function create(): bool
+    public function create(User $authenticatedUser): bool
     {
-        return false;
+        return $authenticatedUser->tokenCan('organization:customers:manage');
     }
 
-    public function update(): bool
+    public function update(User $authenticatedUser): bool
     {
-        return false;
+        return $authenticatedUser->tokenCan('organization:customers:manage');
     }
 
-    public function delete(): bool
+    public function delete(User $authenticatedUser): bool
     {
-        return false;
+        return $authenticatedUser->tokenCan('organization:customers:manage');
     }
 }

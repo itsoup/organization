@@ -49,7 +49,10 @@ class CustomersStoreControllerTest extends TestCase
     /** @test */
     public function authorized_system_operators_can_store_new_customers(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->company,
@@ -72,7 +75,10 @@ class CustomersStoreControllerTest extends TestCase
     /** @test */
     public function it_fails_if_input_is_invalid(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $this->postJson('/customers')
             ->assertJsonValidationErrors([
@@ -85,7 +91,10 @@ class CustomersStoreControllerTest extends TestCase
     {
         Storage::fake();
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->company,

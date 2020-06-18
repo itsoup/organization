@@ -53,7 +53,10 @@ class CustomersUpdateControllerTest extends TestCase
     /** @test */
     public function it_updates_a_customer(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->company,
@@ -77,7 +80,10 @@ class CustomersUpdateControllerTest extends TestCase
     /** @test */
     public function it_fails_to_update_non_existent_customers(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->company,
@@ -93,7 +99,10 @@ class CustomersUpdateControllerTest extends TestCase
     /** @test */
     public function it_fails_if_input_is_invalid(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $this->patchJson("/customers/{$this->customer->id}")
             ->assertJsonValidationErrors([
@@ -106,7 +115,10 @@ class CustomersUpdateControllerTest extends TestCase
     {
         $existingCustomer = factory(Customer::class)->create();
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->company,
@@ -124,7 +136,10 @@ class CustomersUpdateControllerTest extends TestCase
     /** @test */
     public function it_updates_if_vat_number_is_of_the_self_customer(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->company,
@@ -154,7 +169,10 @@ class CustomersUpdateControllerTest extends TestCase
         $this->customer->logo = $existingLogo = UploadedFile::fake()->image('logo.png')->store('customers');
         $this->customer->save();
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->company,
@@ -185,7 +203,10 @@ class CustomersUpdateControllerTest extends TestCase
             'logo' => UploadedFile::fake()->image('logo.png')->store('customers'),
         ]);
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->company,

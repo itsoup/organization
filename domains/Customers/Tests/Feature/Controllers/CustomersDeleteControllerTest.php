@@ -3,6 +3,7 @@
 namespace Domains\Customers\Tests\Feature\Controllers;
 
 use Domains\Customers\Models\Customer;
+use Domains\Roles\Models\Role;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
@@ -14,6 +15,7 @@ class CustomersDeleteControllerTest extends TestCase
 
     private User $systemOperator;
     private Customer $customer;
+    private Role $role;
 
     protected function setUp(): void
     {
@@ -49,7 +51,10 @@ class CustomersDeleteControllerTest extends TestCase
     /** @test */
     public function it_deletes_customer(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $this->deleteJson("/customers/{$this->customer->id}")
             ->assertNoContent();
