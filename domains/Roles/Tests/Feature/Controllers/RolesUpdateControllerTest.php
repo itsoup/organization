@@ -38,9 +38,21 @@ class RolesUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_update_if_missing_required_input(): void
+    public function unauthorized_users_cant_update_resources(): void
     {
         Passport::actingAs($this->user);
+
+        $this->patchJson("/roles/{$this->role->id}")
+            ->assertForbidden();
+    }
+
+    /** @test */
+    public function it_fails_update_if_missing_required_input(): void
+    {
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+            'organization:roles:manage',
+        ]);
 
         $this->patchJson("/roles/{$this->role->id}")
             ->assertJsonValidationErrors([
@@ -58,7 +70,10 @@ class RolesUpdateControllerTest extends TestCase
             ],
         ];
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+            'organization:roles:manage',
+        ]);
 
         $this->patchJson("/roles/{$this->role->id}", $payload)
             ->assertNoContent();
@@ -81,7 +96,10 @@ class RolesUpdateControllerTest extends TestCase
             ],
         ];
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+            'organization:roles:manage',
+        ]);
 
         $this->patchJson('/roles/3', $payload)
             ->assertNotFound();
@@ -99,14 +117,17 @@ class RolesUpdateControllerTest extends TestCase
             ],
         ];
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+            'organization:roles:manage',
+        ]);
 
         $this->patchJson("/roles/{$otherCustomerRole->id}", $payload)
             ->assertNotFound();
     }
 
     /** @test */
-    public function users_cant_updatye_roles_with_scopes_for_customers_module(): void
+    public function users_cant_update_resources_with_scopes_for_customers_module(): void
     {
         $payload = [
             'name' => $this->faker->name,
@@ -118,7 +139,10 @@ class RolesUpdateControllerTest extends TestCase
             ],
         ];
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+            'organization:roles:manage',
+        ]);
 
         $this->patchJson("/roles/{$this->role->id}", $payload)
             ->assertJsonValidationErrors([
@@ -127,7 +151,7 @@ class RolesUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function system_operators_can_update_roles_with_scopes_for_customers_module(): void
+    public function system_operators_can_update_resources_with_scopes_for_customers_module(): void
     {
         $systemOperator = factory(User::class)
             ->state('system-operator')
@@ -147,14 +171,17 @@ class RolesUpdateControllerTest extends TestCase
             ],
         ];
 
-        Passport::actingAs($systemOperator);
+        Passport::actingAs($systemOperator, [
+            'organization:roles:view',
+            'organization:roles:manage',
+        ]);
 
         $this->patchJson("/roles/{$role->id}", $payload)
             ->assertNoContent();
     }
 
     /** @test */
-    public function it_fails_if_scopes_have_invalid_value(): void
+    public function it_fails_if_resource_scopes_have_invalid_value(): void
     {
         $payload = [
             'name' => $this->faker->name,
@@ -163,7 +190,10 @@ class RolesUpdateControllerTest extends TestCase
             ],
         ];
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+            'organization:roles:manage',
+        ]);
 
         $this->patchJson("/roles/{$this->role->id}", $payload)
             ->assertJsonValidationErrors([

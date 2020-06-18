@@ -36,9 +36,21 @@ class RolesDeleteControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_deletes_resources(): void
+    public function unauthorized_users_cant_delete_resources(): void
     {
         Passport::actingAs($this->user);
+
+        $this->deleteJson("/roles/{$this->role->id}")
+            ->assertForbidden();
+    }
+
+    /** @test */
+    public function it_deletes_resources(): void
+    {
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+            'organization:roles:manage',
+        ]);
 
         $this->deleteJson("/roles/{$this->role->id}")
             ->assertNoContent();
@@ -51,7 +63,9 @@ class RolesDeleteControllerTest extends TestCase
     /** @test */
     public function it_fails_delete_of_non_existent_resources(): void
     {
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+        ]);
 
         $this->deleteJson('/roles/3')
             ->assertNotFound();
@@ -62,7 +76,9 @@ class RolesDeleteControllerTest extends TestCase
     {
         $anotherCustomerRole = factory(Role::class)->create();
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+        ]);
 
         $this->deleteJson("/roles/{$anotherCustomerRole->id}")
             ->assertNotFound();

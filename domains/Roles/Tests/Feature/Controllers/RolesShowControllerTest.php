@@ -36,9 +36,20 @@ class RolesShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_shows_a_resource(): void
+    public function unauthorized_users_cant_show_resources(): void
     {
         Passport::actingAs($this->user);
+
+        $this->getJson("/roles/{$this->role->id}")
+            ->assertForbidden();
+    }
+
+    /** @test */
+    public function it_shows_a_resource(): void
+    {
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+        ]);
 
         $this->getJson("/roles/{$this->role->id}")
             ->assertOk()
@@ -58,7 +69,9 @@ class RolesShowControllerTest extends TestCase
     /** @test */
     public function it_fails_to_show_non_existent_resources(): void
     {
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+        ]);
 
         $this->getJson('/roles/3')
             ->assertNotFound();

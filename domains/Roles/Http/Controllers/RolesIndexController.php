@@ -22,6 +22,8 @@ class RolesIndexController extends Controller
 
     public function __invoke(Request $request): AnonymousResourceCollection
     {
+        $this->authorize('viewAny', $this->roles);
+
         $resources = $this->roles
             ->customerId($request->user()->customer_id)
             ->when($request->input('deleted'), static fn (Builder $roles) => $roles->withTrashed())

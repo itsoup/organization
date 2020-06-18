@@ -25,6 +25,8 @@ class RolesDeleteController extends Controller
             ->customerId($request->user()->customer_id)
             ->findOrFail($roleId);
 
+        $this->authorize('delete', $resource);
+
         $resource->delete();
 
         return new Response('', Response::HTTP_NO_CONTENT);

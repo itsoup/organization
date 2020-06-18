@@ -26,6 +26,8 @@ class RolesShowController extends Controller
             ->when($request->input('include'), static fn (Builder $roles, string $relations) => $roles->with($relations))
             ->findOrFail($roleId);
 
+        $this->authorize('view', $resource);
+
         return RoleResource::make($resource);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Domains\Roles\Tests\Feature\Controllers;
 
+use Domains\Customers\Models\Customer;
 use Domains\Roles\Models\Role;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -35,6 +36,15 @@ class RolesIndexControllerTest extends TestCase
     }
 
     /** @test */
+    public function unauthorized_users_cant_list_resources(): void
+    {
+        Passport::actingAs($this->user);
+
+        $this->getJson('/roles')
+            ->assertForbidden();
+    }
+
+    /** @test */
     public function it_lists_non_deleted_resources(): void
     {
         $deletedResource = factory(Role::class)
@@ -43,7 +53,9 @@ class RolesIndexControllerTest extends TestCase
                 'customer_id' => $this->user->customer_id,
             ]);
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+        ]);
 
         $this->getJson('/roles')
             ->assertOk()
@@ -76,7 +88,9 @@ class RolesIndexControllerTest extends TestCase
     {
         $otherCompanyResource = factory(Role::class)->create();
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+        ]);
 
         $this->getJson('/roles')
             ->assertOk()
@@ -96,7 +110,9 @@ class RolesIndexControllerTest extends TestCase
             'customer_id' => null
         ]);
 
-        Passport::actingAs($systemOperator);
+        Passport::actingAs($systemOperator, [
+            'organization:roles:view',
+        ]);
 
         $this->getJson('/roles')
             ->assertOk()
@@ -118,7 +134,9 @@ class RolesIndexControllerTest extends TestCase
                 'customer_id' => $this->user->customer_id,
             ]);
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+        ]);
 
         $this->getJson('/roles?deleted=true')
             ->assertOk()
@@ -130,7 +148,9 @@ class RolesIndexControllerTest extends TestCase
     /** @test */
     public function it_includes_customer_information_if_requested(): void
     {
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+        ]);
 
         $this->getJson('/roles?include=customer')
             ->assertOk()
@@ -139,6 +159,24 @@ class RolesIndexControllerTest extends TestCase
                     [
                         'customer',
                     ],
+                ],
+            ]);
+    }
+
+    /** @test */
+    public function it_navigates_to_next_page(): void
+    {
+        factory(Role::class, 15)->create();
+
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+        ]);
+
+        $this->getJson('/roles?page=2')
+            ->assertOk()
+            ->assertJson([
+                'meta' => [
+                    'current_page' => 2,
                 ],
             ]);
     }
