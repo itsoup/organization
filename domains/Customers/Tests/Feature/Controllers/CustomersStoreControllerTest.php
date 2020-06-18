@@ -34,7 +34,7 @@ class CustomersStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function unauthorized_users_cant_access_endpoint(): void
+    public function unauthorized_users_cant_store_resources(): void
     {
         $user = factory(User::class)
             ->state('user')
@@ -47,7 +47,7 @@ class CustomersStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function authorized_system_operators_can_store_new_customers(): void
+    public function authorized_system_operators_can_store_new_resources(): void
     {
         Passport::actingAs($this->systemOperator, [
             'organization:customers:view',

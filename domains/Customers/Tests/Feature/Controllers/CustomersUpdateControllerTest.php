@@ -38,7 +38,7 @@ class CustomersUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function unauthorized_users_cant_access_endpoint(): void
+    public function unauthorized_users_cant_update_resource(): void
     {
         $user = factory(User::class)
             ->state('user')
@@ -51,7 +51,7 @@ class CustomersUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_updates_a_customer(): void
+    public function it_updates_a_resource(): void
     {
         Passport::actingAs($this->systemOperator, [
             'organization:customers:view',
@@ -78,7 +78,7 @@ class CustomersUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_to_update_non_existent_customers(): void
+    public function it_fails_to_update_non_existent_resources(): void
     {
         Passport::actingAs($this->systemOperator, [
             'organization:customers:view',
@@ -111,7 +111,7 @@ class CustomersUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_if_vat_number_is_already_register_for_another_customer(): void
+    public function it_fails_if_vat_number_is_already_register_for_another_resource(): void
     {
         $existingCustomer = factory(Customer::class)->create();
 
@@ -134,7 +134,7 @@ class CustomersUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_updates_if_vat_number_is_of_the_self_customer(): void
+    public function it_updates_resource_ignoring_its_vat_number_uniqueness(): void
     {
         Passport::actingAs($this->systemOperator, [
             'organization:customers:view',
@@ -161,7 +161,7 @@ class CustomersUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_updates_logo_when_available_on_the_request(): void
+    public function it_updates_resource_logo_when_requested(): void
     {
         Storage::fake();
 
@@ -197,7 +197,7 @@ class CustomersUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_keeps_current_logo_if_a_new_logo_isnt_sent(): void
+    public function it_keeps_current_resource_logo_if_a_new_one_is_not_sent(): void
     {
         $this->customer->update([
             'logo' => UploadedFile::fake()->image('logo.png')->store('customers'),

@@ -33,7 +33,7 @@ class CustomersIndexControllerTest extends TestCase
     }
 
     /** @test */
-    public function unauthorized_users_cant_access_endpoint(): void
+    public function unauthorized_users_cant_access_resources(): void
     {
         $user = factory(User::class)
             ->state('user')
@@ -46,7 +46,7 @@ class CustomersIndexControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_lists_non_deleted_customers(): void
+    public function it_lists_non_deleted_resources(): void
     {
         $deletedCustomer = factory(Customer::class)->state('deleted')->create();
 
@@ -80,7 +80,7 @@ class CustomersIndexControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_lists_deleted_customers_if_requested(): void
+    public function it_lists_deleted_resources_if_requested(): void
     {
         $deletedCustomer = factory(Customer::class)->state('deleted')->create();
 

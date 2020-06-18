@@ -34,7 +34,7 @@ class CustomersShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function unauthorized_users_cant_access_endpoint(): void
+    public function unauthorized_users_cant_access_resource(): void
     {
         $user = factory(User::class)
             ->state('user')
@@ -47,7 +47,7 @@ class CustomersShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_shows_a_customer(): void
+    public function it_shows_a_resource(): void
     {
         Passport::actingAs($this->systemOperator, [
             'organization:customers:view',
@@ -71,7 +71,7 @@ class CustomersShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_to_show_non_existent_customers(): void
+    public function it_fails_to_show_non_existent_resources(): void
     {
         Passport::actingAs($this->systemOperator);
 
@@ -80,7 +80,7 @@ class CustomersShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_shows_deleted_customers(): void
+    public function it_shows_deleted_resources(): void
     {
         $this->customer->delete();
 

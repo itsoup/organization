@@ -36,7 +36,7 @@ class CustomersDeleteControllerTest extends TestCase
     }
 
     /** @test */
-    public function unauthorized_users_cant_access_endpoint(): void
+    public function unauthorized_users_cant_delete_resource(): void
     {
         $user = factory(User::class)
             ->state('user')
@@ -49,7 +49,7 @@ class CustomersDeleteControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_deletes_customer(): void
+    public function it_deletes_resource(): void
     {
         Passport::actingAs($this->systemOperator, [
             'organization:customers:view',
@@ -65,7 +65,7 @@ class CustomersDeleteControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_to_delete_non_existent_customers(): void
+    public function it_fails_to_delete_non_existent_resources(): void
     {
         Passport::actingAs($this->systemOperator);
 
