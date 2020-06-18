@@ -2,7 +2,9 @@
 
 namespace Domains\Roles\Http\Requests;
 
+use Domains\Roles\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RoleStoreRequest extends FormRequest
 {
@@ -25,6 +27,7 @@ class RoleStoreRequest extends FormRequest
             'scopes.*' => [
                 'required',
                 'string',
+                Rule::in(Role::getValidScopesFor($this->user()->account_type)),
             ],
         ];
     }

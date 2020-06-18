@@ -14,6 +14,15 @@ class Role extends Model
 {
     use SoftDeletes;
 
+    protected const SCOPES = [
+        'organization:customers:view',
+        'organization:customers:manage',
+        'organization:roles:view',
+        'organization:roles:manage',
+        'organization:users:view',
+        'organization:users:manage',
+    ];
+
     protected $casts = [
         'customer_id' => 'int',
         'scopes' => 'array',
@@ -38,5 +47,19 @@ class Role extends Model
     public function scopeCustomerId(Builder $query, ?int $customerId): Builder
     {
         return $query->where('customer_id', $customerId);
+    }
+
+    public static function getValidScopesFor(string $accountType): array
+    {
+        if ($accountType === 'user') {
+            return collect(self::SCOPES)
+                ->reject(static function ($scope) {
+                    return str_starts_with($scope, 'organization:customers');
+                })
+                ->values()
+                ->all();
+        }
+
+        return self::SCOPES;
     }
 }

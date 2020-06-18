@@ -37,7 +37,7 @@ class RolesStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_to_store_resource_if_missing_required_input(): void
+    public function it_fails_if_missing_required_input(): void
     {
         Passport::actingAs($this->user);
 
@@ -48,10 +48,26 @@ class RolesStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function users_can_store_new_resources_automatically_associated_with_their_customer_id(): void
+    public function it_fails_if_scopes_have_invalid_value(): void
     {
+        $payload = [
+            'name' => $this->faker->name,
+            'scopes' => [
+                'invalid:scope:value',
+            ],
+        ];
+
         Passport::actingAs($this->user);
 
+        $this->postJson('/roles', $payload)
+            ->assertJsonValidationErrors([
+                'scopes.0',
+            ]);
+    }
+
+    /** @test */
+    public function users_can_store_new_resources_automatically_associated_with_their_customer_id(): void
+    {
         $payload = [
             'name' => $this->faker->name,
             'scopes' => [
@@ -59,6 +75,8 @@ class RolesStoreControllerTest extends TestCase
                 'organization:roles:manage',
             ],
         ];
+
+        Passport::actingAs($this->user);
 
         $this->postJson('/roles', $payload)
             ->assertNoContent();
@@ -73,8 +91,6 @@ class RolesStoreControllerTest extends TestCase
     /** @test */
     public function system_operators_can_store_new_resources_automatically_associated_with_their_customer_id(): void
     {
-        Passport::actingAs($this->systemOperator);
-
         $payload = [
             'name' => $this->faker->name,
             'scopes' => [
@@ -82,6 +98,8 @@ class RolesStoreControllerTest extends TestCase
                 'organization:roles:manage',
             ],
         ];
+
+        Passport::actingAs($this->systemOperator);
 
         $this->postJson('/roles', $payload)
             ->assertNoContent();
@@ -91,5 +109,45 @@ class RolesStoreControllerTest extends TestCase
             'name' => $payload['name'],
             'scopes' => json_encode($payload['scopes']),
         ]);
+    }
+
+    /** @test */
+    public function users_cant_create_roles_with_scopes_for_customers_module(): void
+    {
+        $payload = [
+            'name' => $this->faker->name,
+            'scopes' => [
+                'organization:customers:view',
+                'organization:customers:manage',
+                'organization:roles:view',
+                'organization:roles:manage',
+            ],
+        ];
+
+        Passport::actingAs($this->user);
+
+        $this->postJson('/roles', $payload)
+            ->assertJsonValidationErrors([
+                'scopes.0', 'scopes.1',
+            ]);
+    }
+
+    /** @test */
+    public function system_operators_can_create_roles_with_scopes_for_customers_module(): void
+    {
+        $payload = [
+            'name' => $this->faker->name,
+            'scopes' => [
+                'organization:customers:view',
+                'organization:customers:manage',
+                'organization:roles:view',
+                'organization:roles:manage',
+            ],
+        ];
+
+        Passport::actingAs($this->systemOperator);
+
+        $this->postJson('/roles', $payload)
+            ->assertNoContent();
     }
 }
