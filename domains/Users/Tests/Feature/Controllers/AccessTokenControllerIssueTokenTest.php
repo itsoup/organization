@@ -2,6 +2,7 @@
 
 namespace Domains\Users\Tests\Feature\Controllers;
 
+use Domains\Roles\Models\Role;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -17,6 +18,7 @@ class AccessTokenControllerIssueTokenTest extends TestCase
 
     private Client $passportClient;
     private User $user;
+    private Role $role;
 
     protected function setUp(): void
     {
@@ -36,6 +38,12 @@ class AccessTokenControllerIssueTokenTest extends TestCase
             ->create([
                 'password' => 'secret',
             ]);
+
+        $this->role = factory(Role::class)->create([
+            'customer_id' => $this->user->customer_id,
+        ]);
+
+        $this->user->roles()->sync($this->role);
     }
 
     /** @test */
@@ -47,7 +55,6 @@ class AccessTokenControllerIssueTokenTest extends TestCase
             'client_secret' => $this->passportClient->secret,
             'username' => $this->user->email,
             'password' => 'secret',
-            'scopes' => '*',
         ])
             ->assertOk()
             ->decodeResponseJson('access_token');
@@ -60,5 +67,6 @@ class AccessTokenControllerIssueTokenTest extends TestCase
         $this->assertEquals($this->user->name, $decodedJwt->getClaim('name'));
         $this->assertEquals($this->user->email, $decodedJwt->getClaim('email'));
         $this->assertEquals($this->user->account_type, $decodedJwt->getClaim('account_type'));
+        $this->assertEquals($this->role->scopes, $decodedJwt->getClaim('scopes'));
     }
 }

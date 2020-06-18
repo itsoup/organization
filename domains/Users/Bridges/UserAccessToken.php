@@ -22,7 +22,7 @@ class UserAccessToken extends PassportAccessToken
     {
         parent::__construct($userIdentifier, $scopes, $client);
 
-        $this->user = User::find($userIdentifier);
+        $this->user = User::with('roles')->find($userIdentifier);
     }
 
     private function convertToJWT(CryptKey $privateKey): Token
@@ -34,7 +34,7 @@ class UserAccessToken extends PassportAccessToken
             ->canOnlyBeUsedAfter(\time())
             ->expiresAt($this->getExpiryDateTime()->getTimestamp())
             ->relatedTo((string) $this->getUserIdentifier())
-            ->withClaim('scopes', $this->getScopes())
+            ->withClaim('scopes', $this->user->roles->pluck('scopes')->flatten()->unique())
             ->withClaim('customer_id', $this->user->customer_id)
             ->withClaim('vat_number', $this->user->vat_number)
             ->withClaim('name', $this->user->name)
