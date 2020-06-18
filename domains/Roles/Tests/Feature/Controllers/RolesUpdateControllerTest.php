@@ -104,4 +104,70 @@ class RolesUpdateControllerTest extends TestCase
         $this->patchJson("/roles/{$otherCustomerRole->id}", $payload)
             ->assertNotFound();
     }
+
+    /** @test */
+    public function users_cant_updatye_roles_with_scopes_for_customers_module(): void
+    {
+        $payload = [
+            'name' => $this->faker->name,
+            'scopes' => [
+                'organization:customers:view',
+                'organization:customers:manage',
+                'organization:roles:view',
+                'organization:roles:manage',
+            ],
+        ];
+
+        Passport::actingAs($this->user);
+
+        $this->patchJson("/roles/{$this->role->id}", $payload)
+            ->assertJsonValidationErrors([
+                'scopes.0', 'scopes.1',
+            ]);
+    }
+
+    /** @test */
+    public function system_operators_can_update_roles_with_scopes_for_customers_module(): void
+    {
+        $systemOperator = factory(User::class)
+            ->state('system-operator')
+            ->create();
+
+        $role = factory(Role::class)->create([
+            'customer_id' => $systemOperator->customer_id,
+        ]);
+
+        $payload = [
+            'name' => $this->faker->name,
+            'scopes' => [
+                'organization:customers:view',
+                'organization:customers:manage',
+                'organization:roles:view',
+                'organization:roles:manage',
+            ],
+        ];
+
+        Passport::actingAs($systemOperator);
+
+        $this->patchJson("/roles/{$role->id}", $payload)
+            ->assertNoContent();
+    }
+
+    /** @test */
+    public function it_fails_if_scopes_have_invalid_value(): void
+    {
+        $payload = [
+            'name' => $this->faker->name,
+            'scopes' => [
+                'invalid:scope:value',
+            ],
+        ];
+
+        Passport::actingAs($this->user);
+
+        $this->patchJson("/roles/{$this->role->id}", $payload)
+            ->assertJsonValidationErrors([
+                'scopes.0',
+            ]);
+    }
 }
