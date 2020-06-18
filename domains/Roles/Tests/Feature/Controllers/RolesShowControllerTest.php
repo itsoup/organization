@@ -82,7 +82,9 @@ class RolesShowControllerTest extends TestCase
     {
         $anotherCustomerRole = factory(Role::class)->create();
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+        ]);
 
         $this->getJson("/roles/{$anotherCustomerRole->id}")
             ->assertNotFound();
@@ -91,7 +93,9 @@ class RolesShowControllerTest extends TestCase
     /** @test */
     public function it_includes_customer_information_if_requested(): void
     {
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+        ]);
 
         $this->getJson("/roles/{$this->role->id}?include=customer")
             ->assertOk()
