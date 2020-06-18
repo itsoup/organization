@@ -67,7 +67,10 @@ class CustomersDeleteControllerTest extends TestCase
     /** @test */
     public function it_fails_to_delete_non_existent_resources(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $this->deleteJson('/customers/2')
             ->assertNotFound();

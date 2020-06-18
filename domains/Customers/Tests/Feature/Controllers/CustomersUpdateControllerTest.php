@@ -53,17 +53,17 @@ class CustomersUpdateControllerTest extends TestCase
     /** @test */
     public function it_updates_a_resource(): void
     {
-        Passport::actingAs($this->systemOperator, [
-            'organization:customers:view',
-            'organization:customers:manage',
-        ]);
-
         $payload = [
             'name' => $this->faker->company,
             'vat_number' => $this->faker->countryCode . $this->faker->randomNumber(9),
             'address' => $this->faker->address,
             'country' => $this->faker->countryCode,
         ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $this->patchJson("/customers/{$this->customer->id}", $payload)
             ->assertNoContent();
@@ -80,17 +80,17 @@ class CustomersUpdateControllerTest extends TestCase
     /** @test */
     public function it_fails_to_update_non_existent_resources(): void
     {
-        Passport::actingAs($this->systemOperator, [
-            'organization:customers:view',
-            'organization:customers:manage',
-        ]);
-
         $payload = [
             'name' => $this->faker->company,
             'vat_number' => $this->faker->countryCode . $this->faker->randomNumber(9),
             'address' => $this->faker->address,
             'country' => $this->faker->countryCode,
         ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $this->patchJson('/customers/2', $payload)
             ->assertNotFound();
@@ -115,17 +115,17 @@ class CustomersUpdateControllerTest extends TestCase
     {
         $existingCustomer = factory(Customer::class)->create();
 
-        Passport::actingAs($this->systemOperator, [
-            'organization:customers:view',
-            'organization:customers:manage',
-        ]);
-
         $payload = [
             'name' => $this->faker->company,
             'vat_number' => $existingCustomer->vat_number,
             'address' => $this->faker->address,
             'country' => $this->faker->countryCode,
         ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $this->patchJson("/customers/{$this->customer->id}", $payload)
             ->assertJsonValidationErrors([
@@ -136,17 +136,17 @@ class CustomersUpdateControllerTest extends TestCase
     /** @test */
     public function it_updates_resource_ignoring_its_vat_number_uniqueness(): void
     {
-        Passport::actingAs($this->systemOperator, [
-            'organization:customers:view',
-            'organization:customers:manage',
-        ]);
-
         $payload = [
             'name' => $this->faker->company,
             'vat_number' => $this->customer->vat_number,
             'address' => $this->faker->address,
             'country' => $this->faker->countryCode,
         ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $this->patchJson("/customers/{$this->customer->id}", $payload)
             ->assertNoContent();
@@ -169,17 +169,17 @@ class CustomersUpdateControllerTest extends TestCase
         $this->customer->logo = $existingLogo = UploadedFile::fake()->image('logo.png')->store('customers');
         $this->customer->save();
 
-        Passport::actingAs($this->systemOperator, [
-            'organization:customers:view',
-            'organization:customers:manage',
-        ]);
-
         $payload = [
             'name' => $this->faker->company,
             'vat_number' => $this->faker->countryCode . $this->faker->randomNumber(9),
             'country' => $this->faker->countryCode,
             'logo' => UploadedFile::fake()->image('new_logo.png'),
         ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $this->patchJson("/customers/{$this->customer->id}", $payload)
             ->assertNoContent();
@@ -203,16 +203,16 @@ class CustomersUpdateControllerTest extends TestCase
             'logo' => UploadedFile::fake()->image('logo.png')->store('customers'),
         ]);
 
-        Passport::actingAs($this->systemOperator, [
-            'organization:customers:view',
-            'organization:customers:manage',
-        ]);
-
         $payload = [
             'name' => $this->faker->company,
             'vat_number' => $this->faker->countryCode . $this->faker->randomNumber(9),
             'country' => $this->faker->countryCode,
         ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $this->patchJson("/customers/{$this->customer->id}", $payload)
             ->assertNoContent();

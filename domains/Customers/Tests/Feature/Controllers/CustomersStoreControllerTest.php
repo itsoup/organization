@@ -49,17 +49,17 @@ class CustomersStoreControllerTest extends TestCase
     /** @test */
     public function authorized_system_operators_can_store_new_resources(): void
     {
-        Passport::actingAs($this->systemOperator, [
-            'organization:customers:view',
-            'organization:customers:manage',
-        ]);
-
         $payload = [
             'name' => $this->faker->company,
             'vat_number' => $this->faker->countryCode . $this->faker->randomNumber(9),
             'country' => $this->faker->countryCode,
             'address' => $this->faker->address,
         ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+            'organization:customers:manage',
+        ]);
 
         $this->postJson('/customers', $payload)
             ->assertCreated();

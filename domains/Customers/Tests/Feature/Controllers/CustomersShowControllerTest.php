@@ -73,7 +73,9 @@ class CustomersShowControllerTest extends TestCase
     /** @test */
     public function it_fails_to_show_non_existent_resources(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:customers:view',
+        ]);
 
         $this->getJson('/customers/2')
             ->assertNotFound();
