@@ -43,4 +43,7 @@ jobs:
           vendor/bin/phpunit --testdox --coverage-clover build/logs/clover.xml
 
       - name: Store test coverage report
-        run: vendor/bin/php-coveralls -v
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: build/logs/clover.xml
