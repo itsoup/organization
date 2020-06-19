@@ -28,9 +28,27 @@ class UsersShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function system_operators_can_view_details_of_all_users(): void
+    public function unauthenticated_users_cant_access_endpoint(): void
+    {
+        $this->getJson("/users/{$this->user->id}")
+            ->assertUnauthorized();
+    }
+
+    /** @test */
+    public function unauthorized_users_cant_show_resources(): void
     {
         Passport::actingAs($this->systemOperator);
+
+        $this->getJson("/users/{$this->user->id}")
+            ->assertForbidden();
+    }
+
+    /** @test */
+    public function system_operators_can_show_any_resource(): void
+    {
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+        ]);
 
         $this->getJson("/users/{$this->user->id}")
             ->assertOk()
@@ -52,7 +70,9 @@ class UsersShowControllerTest extends TestCase
     /** @test */
     public function it_includes_customer_information_if_requested(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+        ]);
 
         $this->getJson("/users/{$this->user->id}?include=customer")
             ->assertOk()
@@ -64,13 +84,15 @@ class UsersShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function system_operators_can_view_details_of_other_system_operators(): void
+    public function system_operators_can_show_other_system_operators(): void
     {
         $anotherSystemOperator = factory(User::class)
             ->state('system-operator')
             ->create();
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+        ]);
 
         $this->getJson("/users/{$anotherSystemOperator->id}")
             ->assertOk()
@@ -91,7 +113,7 @@ class UsersShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function users_can_view_details_of_users_of_their_customer(): void
+    public function users_can_show_resources_of_their_customer(): void
     {
         $userFromSameCustomer = factory(User::class)
             ->state('user')
@@ -99,7 +121,9 @@ class UsersShowControllerTest extends TestCase
                 'customer_id' => $this->user->customer_id,
             ]);
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+        ]);
 
         $this->getJson("/users/{$userFromSameCustomer->id}")
             ->assertOk()
@@ -119,13 +143,15 @@ class UsersShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function users_cant_view_details_of_users_of_other_customers(): void
+    public function users_cant_show_resources_of_other_customers(): void
     {
         $userFromAnotherCustomer = factory(User::class)
             ->state('user')
             ->create();
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+        ]);
 
         $this->getJson("/users/{$userFromAnotherCustomer->id}")
             ->assertForbidden();

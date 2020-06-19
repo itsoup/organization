@@ -39,9 +39,21 @@ class UsersStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function system_operators_can_create_new_system_operators(): void
+    public function unauthorized_users_cant_store_resources(): void
     {
         Passport::actingAs($this->systemOperator);
+
+        $this->postJson('/users')
+            ->assertForbidden();
+    }
+
+    /** @test */
+    public function system_operators_can_store_new_system_operators(): void
+    {
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $payload = [
             'customer_id' => null,
@@ -70,13 +82,16 @@ class UsersStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function users_cant_create_new_system_operators(): void
+    public function users_cant_store_new_system_operators(): void
     {
         $user = factory(User::class)
             ->state('user')
             ->create();
 
-        Passport::actingAs($user);
+        Passport::actingAs($user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $payload = [
             'customer_id' => null,
@@ -96,11 +111,14 @@ class UsersStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function system_operators_can_create_new_users_associated_with_any_customer(): void
+    public function system_operators_can_store_new_users_associated_with_any_customer(): void
     {
         $customer = factory(Customer::class)->create();
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->name,
@@ -129,9 +147,12 @@ class UsersStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function users_can_create_new_users(): void
+    public function users_can_store_new_users(): void
     {
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->name,
@@ -161,7 +182,10 @@ class UsersStoreControllerTest extends TestCase
     /** @test */
     public function it_fails_if_user_sends_customer_id_when_creating_other_users(): void
     {
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $payload = [
             'customer_id' => 1,
@@ -182,7 +206,10 @@ class UsersStoreControllerTest extends TestCase
     /** @test */
     public function it_fails_if_input_is_invalid(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->postJson('/users')
             ->assertJsonValidationErrors([
@@ -191,9 +218,12 @@ class UsersStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_if_email_is_already_registered_to_another_user(): void
+    public function it_fails_if_email_is_already_registered_to_another_resource(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->name,
@@ -206,9 +236,12 @@ class UsersStoreControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_if_vat_number_is_already_registered_to_another_user(): void
+    public function it_fails_if_vat_number_is_already_registered_to_another_resource(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->name,
@@ -224,7 +257,10 @@ class UsersStoreControllerTest extends TestCase
     /** @test */
     public function it_fails_if_customer_id_doesnt_exists(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $payload = [
             'name' => $this->faker->name,

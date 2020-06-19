@@ -11,7 +11,9 @@ class RoleUserStoreRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->id !== (int) $this->route('userId');
+        return $this->user()->tokenCan('organization:users:view')
+            && $this->user()->tokenCan('organization:users:manage')
+            && $this->user()->id !== (int) $this->route('userId');
     }
 
     public function rules(): array

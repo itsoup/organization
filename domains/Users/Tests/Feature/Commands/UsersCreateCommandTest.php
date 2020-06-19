@@ -22,7 +22,7 @@ class UsersCreateCommandTest extends TestCase
     }
 
     /** @test */
-    public function it_creates_a_user_as_system_operator_without_any_argument_provided(): void
+    public function it_creates_a_resource_as_system_operator_without_any_argument_provided(): void
     {
         $userName = $this->faker->name;
         $userEmail = $this->faker->safeEmail;
@@ -52,7 +52,7 @@ class UsersCreateCommandTest extends TestCase
     }
 
     /** @test */
-    public function it_creates_a_user_as_system_operator_with_provided_arguments(): void
+    public function it_creates_a_resource_as_system_operator_with_provided_arguments(): void
     {
         $userName = $this->faker->name;
         $userEmail = $this->faker->safeEmail;

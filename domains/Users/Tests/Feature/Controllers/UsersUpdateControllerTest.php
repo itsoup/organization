@@ -45,11 +45,18 @@ class UsersUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function system_operators_can_update_all_users(): void
+    public function unauthorized_users_cant_update_resources(): void
+    {
+        Passport::actingAs($this->systemOperator);
+
+        $this->patchJson("/users/{$this->userToUpdate->id}")
+            ->assertForbidden();
+    }
+
+    /** @test */
+    public function system_operators_can_update_any_resource(): void
     {
         $anotherCustomer = factory(Customer::class)->create();
-
-        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->name,
@@ -59,6 +66,11 @@ class UsersUpdateControllerTest extends TestCase
             'customer_id' => $anotherCustomer->id,
         ];
 
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
+
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
             ->assertNoContent();
 
@@ -66,10 +78,8 @@ class UsersUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function users_can_update_other_users_related_with_their_customer(): void
+    public function users_can_update_resources_related_with_their_customer(): void
     {
-        Passport::actingAs($this->user);
-
         $payload = [
             'name' => $this->faker->name,
             'email' => $this->faker->safeEmail,
@@ -77,6 +87,11 @@ class UsersUpdateControllerTest extends TestCase
             'phone' => $this->faker->e164PhoneNumber,
         ];
 
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
+
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
             ->assertNoContent();
 
@@ -84,31 +99,32 @@ class UsersUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function users_cant_update_other_users_from_other_customers(): void
+    public function users_cant_update_resources_from_other_customers(): void
     {
         $userFromAnotherCustomer = factory(User::class)
             ->state('user')
             ->create();
 
-        Passport::actingAs($this->user);
-
         $payload = [
             'name' => $this->faker->name,
             'email' => $this->faker->safeEmail,
             'vat_number' => $this->faker->countryCode . $this->faker->randomNumber(9),
             'phone' => $this->faker->e164PhoneNumber,
         ];
+
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->patchJson("/users/{$userFromAnotherCustomer->id}", $payload)
             ->assertNotFound();
     }
 
     /** @test */
-    public function users_cant_update_customer_id(): void
+    public function users_cant_update_resources_customer_id(): void
     {
         $anotherCustomer = factory(Customer::class)->create();
-
-        Passport::actingAs($this->user);
 
         $payload = [
             'name' => $this->faker->name,
@@ -116,20 +132,28 @@ class UsersUpdateControllerTest extends TestCase
             'customer_id' => $anotherCustomer->id,
         ];
 
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
+
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
             ->assertForbidden();
     }
 
     /** @test */
-    public function system_operators_can_update_customer_id_to_null(): void
+    public function system_operators_can_update_resources_customer_id_to_null(): void
     {
-        Passport::actingAs($this->systemOperator);
-
         $payload = [
             'name' => $this->faker->name,
             'email' => $this->faker->safeEmail,
             'customer_id' => null,
         ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
             ->assertNoContent();
@@ -138,7 +162,7 @@ class UsersUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function users_cant_update_customer_id_to_null(): void
+    public function users_cant_update_resources_customer_id_to_null(): void
     {
         $anotherUser = factory(User::class)
             ->state('user')
@@ -146,13 +170,16 @@ class UsersUpdateControllerTest extends TestCase
                 'customer_id' => $this->userToUpdate->customer_id,
             ]);
 
-        Passport::actingAs($anotherUser);
-
         $payload = [
             'name' => $this->faker->name,
             'email' => $this->faker->safeEmail,
             'customer_id' => null,
         ];
+
+        Passport::actingAs($anotherUser, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
             ->assertForbidden();
@@ -161,7 +188,10 @@ class UsersUpdateControllerTest extends TestCase
     /** @test */
     public function it_fails_if_input_is_invalid(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->patchJson("/users/{$this->userToUpdate->id}")
             ->assertJsonValidationErrors([
@@ -170,14 +200,17 @@ class UsersUpdateControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_if_email_is_already_registered_to_another_user(): void
+    public function it_fails_if_email_is_already_registered_to_another_resource(): void
     {
-        Passport::actingAs($this->systemOperator);
-
         $payload = [
             'name' => $this->faker->name,
             'email' => $this->systemOperator->email,
         ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
             ->assertJsonValidationErrors(['email']);
@@ -186,42 +219,52 @@ class UsersUpdateControllerTest extends TestCase
     /** @test */
     public function it_fails_if_email_is_sent_empty(): void
     {
-        Passport::actingAs($this->systemOperator);
 
         $payload = [
             'name' => $this->faker->name,
             'email' => '',
         ];
 
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
+
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
             ->assertJsonValidationErrors(['email']);
     }
 
     /** @test */
-    public function it_updates_with_existent_vat_number_if_is_of_the_requested_user(): void
+    public function it_updates_resource_ignoring_its_vat_number_uniqueness(): void
     {
-        Passport::actingAs($this->systemOperator);
-
         $payload = [
             'name' => $this->faker->name,
             'email' => $this->faker->email,
             'vat_number' => $this->userToUpdate->vat_number,
         ];
 
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
+
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
             ->assertNoContent();
     }
 
     /** @test */
-    public function it_fails_if_vat_number_is_already_registered_to_another_user(): void
+    public function it_fails_if_vat_number_is_already_registered_to_another_resource(): void
     {
-        Passport::actingAs($this->systemOperator);
-
         $payload = [
             'name' => $this->faker->name,
             'email' => $this->faker->email,
             'vat_number' => $this->systemOperator->vat_number,
         ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
             ->assertJsonValidationErrors(['vat_number']);
@@ -230,13 +273,16 @@ class UsersUpdateControllerTest extends TestCase
     /** @test */
     public function it_fails_if_customer_id_doesnt_exists(): void
     {
-        Passport::actingAs($this->systemOperator);
-
         $payload = [
             'name' => $this->faker->name,
             'email' => $this->faker->safeEmail,
             'customer_id' => 5,
         ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
             ->assertJsonValidationErrors(['customer_id']);
@@ -245,17 +291,18 @@ class UsersUpdateControllerTest extends TestCase
     /** @test */
     public function it_fails_if_is_self_account(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->patchJson("/users/{$this->systemOperator->id}")
             ->assertForbidden();
     }
 
     /** @test */
-    public function it_fails_if_user_sends_customer_id_when_updating_other_users(): void
+    public function it_fails_if_user_sends_customer_id_when_updating_resources(): void
     {
-        Passport::actingAs($this->user);
-
         $payload = [
             'name' => $this->faker->name,
             'email' => $this->faker->safeEmail,
@@ -263,6 +310,11 @@ class UsersUpdateControllerTest extends TestCase
             'phone' => $this->faker->e164PhoneNumber,
             'customer_id' => 1,
         ];
+
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
             ->assertForbidden();

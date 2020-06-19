@@ -29,6 +29,8 @@ class RolesUsersIndexController extends Controller
             )
             ->findOrFail($userId);
 
+        $this->authorize('view', $resource);
+
         return RoleResource::collection($resource->roles);
     }
 }

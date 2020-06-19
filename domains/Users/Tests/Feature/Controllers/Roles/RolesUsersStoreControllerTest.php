@@ -48,9 +48,27 @@ class RolesUsersStoreControllerTest extends TestCase
     }
 
     /** @test */
+    public function unauthorized_users_cant_attach_roles_to_users(): void
+    {
+        $payload = [
+            'roles' => [
+                $this->role->id,
+            ],
+        ];
+
+        Passport::actingAs($this->user);
+
+        $this->putJson("/users/{$this->userToHandle->id}/roles", $payload)
+            ->assertForbidden();
+    }
+
+    /** @test */
     public function it_fails_if_required_input_is_missing(): void
     {
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->putJson("/users/{$this->userToHandle->id}/roles")
             ->assertJsonValidationErrors([
@@ -67,7 +85,10 @@ class RolesUsersStoreControllerTest extends TestCase
             ],
         ];
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->putJson("/users/{$this->userToHandle->id}/roles", $payload)
             ->assertNoContent();
@@ -95,7 +116,10 @@ class RolesUsersStoreControllerTest extends TestCase
             ],
         ];
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->putJson("/users/{$systemOperatorToHandle->id}/roles", $payload)
             ->assertNoContent();
@@ -119,7 +143,10 @@ class RolesUsersStoreControllerTest extends TestCase
             ],
         ];
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->putJson("/users/{$otherCustomerUser->id}/roles", $payload)
             ->assertNotFound();
@@ -134,7 +161,10 @@ class RolesUsersStoreControllerTest extends TestCase
             ],
         ];
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->putJson('/users/4/roles', $payload)
             ->assertNotFound();
@@ -149,7 +179,10 @@ class RolesUsersStoreControllerTest extends TestCase
             ],
         ];
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->putJson("/users/{$this->userToHandle->id}/roles", $payload)
             ->assertJsonValidationErrors([
@@ -166,7 +199,10 @@ class RolesUsersStoreControllerTest extends TestCase
             ],
         ];
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
 
         $this->putJson("/users/{$this->user->id}/roles", $payload)
             ->assertForbidden();

@@ -25,6 +25,16 @@ class UserAccessToken extends PassportAccessToken
         $this->user = User::with('roles')->find($userIdentifier);
     }
 
+    public function getScopes(): array
+    {
+        return $this->user
+            ->roles()
+            ->pluck('scopes')
+            ->flatten()
+            ->unique()
+            ->toArray();
+    }
+
     private function convertToJWT(CryptKey $privateKey): Token
     {
         return (new Builder())
@@ -34,7 +44,7 @@ class UserAccessToken extends PassportAccessToken
             ->canOnlyBeUsedAfter(\time())
             ->expiresAt($this->getExpiryDateTime()->getTimestamp())
             ->relatedTo((string) $this->getUserIdentifier())
-            ->withClaim('scopes', $this->user->roles->pluck('scopes')->flatten()->unique())
+            ->withClaim('scopes', $this->getScopes())
             ->withClaim('customer_id', $this->user->customer_id)
             ->withClaim('vat_number', $this->user->vat_number)
             ->withClaim('name', $this->user->name)

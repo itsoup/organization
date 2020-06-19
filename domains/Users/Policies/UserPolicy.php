@@ -11,6 +11,10 @@ class UserPolicy
 
     public function before(User $authenticatedUser, string $ability): ?bool
     {
+        if (! $authenticatedUser->tokenCan('organization:users:view')) {
+            return false;
+        }
+
         if ($ability !== 'update' && $authenticatedUser->isSystemOperator()) {
             return true;
         }
@@ -30,13 +34,17 @@ class UserPolicy
 
     public function create(User $authenticatedUser, bool $requestMissingCustomerId): bool
     {
-        return $authenticatedUser->isSystemOperator()
-            || ($authenticatedUser->isUser() && $requestMissingCustomerId);
+        return $authenticatedUser->tokenCan('organization:users:manage')
+            && (
+                $authenticatedUser->isSystemOperator()
+                || ($authenticatedUser->isUser() && $requestMissingCustomerId)
+            );
     }
 
     public function update(User $authenticatedUser, int $resourceId, bool $requestMissingCustomerId): bool
     {
-        return $authenticatedUser->id !== $resourceId
+        return $authenticatedUser->tokenCan('organization:users:manage')
+            && $authenticatedUser->id !== $resourceId
             && (
                 $authenticatedUser->isSystemOperator()
                 || (
@@ -47,7 +55,8 @@ class UserPolicy
 
     public function delete(User $authenticatedUser, User $resource): bool
     {
-        return $authenticatedUser->isNot($resource)
+        return $authenticatedUser->tokenCan('organization:users:manage')
+            && $authenticatedUser->isNot($resource)
             && $authenticatedUser->customer_id === $resource->customer_id;
     }
 }

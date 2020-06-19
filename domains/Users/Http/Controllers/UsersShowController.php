@@ -15,6 +15,8 @@ class UsersShowController extends Controller
 
     public function __construct(User $users)
     {
+        $this->middleware('auth');
+
         $this->users = $users;
     }
 

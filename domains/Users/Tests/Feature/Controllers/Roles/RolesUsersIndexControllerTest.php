@@ -40,6 +40,21 @@ class RolesUsersIndexControllerTest extends TestCase
     }
 
     /** @test */
+    public function unauthorized_users_cant_access_endpoint(): void
+    {
+        $userToHandle = factory(User::class)
+            ->state('user')
+            ->create([
+                'customer_id' => $this->user->customer_id,
+            ]);
+
+        Passport::actingAs($this->user);
+
+        $this->getJson("/users/{$userToHandle->id}/roles")
+            ->assertForbidden();
+    }
+
+    /** @test */
     public function it_lists_all_resources_attached_to_a_user(): void
     {
         $userToHandle = factory(User::class)
@@ -56,7 +71,9 @@ class RolesUsersIndexControllerTest extends TestCase
             $role->id,
         );
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+        ]);
 
         $this->getJson("/users/{$userToHandle->id}/roles")
             ->assertOk()
@@ -84,7 +101,9 @@ class RolesUsersIndexControllerTest extends TestCase
             $role->id,
         );
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+        ]);
 
         $this->getJson("/users/{$systemOperatorToHandle->id}/roles")
             ->assertOk()
@@ -104,7 +123,9 @@ class RolesUsersIndexControllerTest extends TestCase
             ->state('user')
             ->create();
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+        ]);
 
         $this->getJson("/users/{$anotherCustomerUser->id}/roles")
             ->assertNotFound();

@@ -35,7 +35,16 @@ class UsersIndexControllerTest extends TestCase
     }
 
     /** @test */
-    public function system_operators_can_list_all_non_deleted_users(): void
+    public function unauthorized_users_cant_list_resources(): void
+    {
+        Passport::actingAs($this->systemOperator);
+
+        $this->getJson('/users')
+            ->assertForbidden();
+    }
+
+    /** @test */
+    public function system_operators_can_list_all_non_deleted_resources(): void
     {
         $user = factory(User::class)
             ->state('user')
@@ -45,7 +54,9 @@ class UsersIndexControllerTest extends TestCase
             ->states('user', 'deleted')
             ->create();
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+        ]);
 
         $this->getJson('/users')
             ->assertOk()
@@ -76,7 +87,7 @@ class UsersIndexControllerTest extends TestCase
     }
 
     /** @test */
-    public function users_can_list_all_non_deleted_users_related_with_their_customer(): void
+    public function users_can_list_all_non_deleted_resources_related_with_their_customer(): void
     {
         $otherUser = factory(User::class)
             ->state('user')
@@ -94,7 +105,9 @@ class UsersIndexControllerTest extends TestCase
             ->states('user')
             ->create();
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+        ]);
 
         $this->getJson('/users')
             ->assertOk()
@@ -130,7 +143,9 @@ class UsersIndexControllerTest extends TestCase
     /** @test */
     public function it_doesnt_list_authenticated_user(): void
     {
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+        ]);
 
         $this->getJson('/users?deleted=true')
             ->assertOk()
@@ -140,7 +155,25 @@ class UsersIndexControllerTest extends TestCase
     }
 
     /** @test */
-    public function system_operators_can_list_deleted_users_if_requested(): void
+    public function system_operators_can_list_deleted_resources_if_requested(): void
+    {
+        $deletedUser = factory(User::class)
+            ->states('user', 'deleted')
+            ->create();
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+        ]);
+
+        $this->getJson('/users?deleted=true')
+            ->assertOk()
+            ->assertJsonFragment([
+                'id' => $deletedUser->id,
+            ]);
+    }
+
+    /** @test */
+    public function users_can_list_deleted_resources_related_with_their_customer_if_requested(): void
     {
         $deletedUser = factory(User::class)
             ->states('user', 'deleted')
@@ -148,7 +181,9 @@ class UsersIndexControllerTest extends TestCase
                 'customer_id' => $this->user->customer_id,
             ]);
 
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+        ]);
 
         $this->getJson('/users?deleted=true')
             ->assertOk()
@@ -158,23 +193,7 @@ class UsersIndexControllerTest extends TestCase
     }
 
     /** @test */
-    public function users_can_list_deleted_users_related_with_their_customer_if_requested(): void
-    {
-        $deletedUser = factory(User::class)
-            ->states('user', 'deleted')
-            ->create();
-
-        Passport::actingAs($this->systemOperator);
-
-        $this->getJson('/users?deleted=true')
-            ->assertOk()
-            ->assertJsonFragment([
-                'id' => $deletedUser->id,
-            ]);
-    }
-
-    /** @test */
-    public function system_operators_can_filter_users_by_customer(): void
+    public function system_operators_can_filter_resources_by_customer(): void
     {
         $users = factory(User::class, 2)
             ->states('user')
@@ -182,7 +201,9 @@ class UsersIndexControllerTest extends TestCase
 
         $customerId = $users->first()->customer_id;
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+        ]);
 
         $this->getJson("/users?customer={$customerId}")
             ->assertOk()
@@ -201,7 +222,9 @@ class UsersIndexControllerTest extends TestCase
             ->states('user')
             ->create();
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+        ]);
 
         $this->getJson('/users?include=customer')
             ->assertOk()
@@ -219,7 +242,9 @@ class UsersIndexControllerTest extends TestCase
     {
         factory(User::class, 15)->create();
 
-        Passport::actingAs($this->systemOperator);
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+        ]);
 
         $this->getJson('/users?page=2')
             ->assertOk()
