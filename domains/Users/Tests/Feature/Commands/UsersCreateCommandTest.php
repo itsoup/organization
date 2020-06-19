@@ -2,6 +2,7 @@
 
 namespace Domains\Users\Tests\Feature\Commands;
 
+use Domains\Roles\Models\Role;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -76,6 +77,24 @@ class UsersCreateCommandTest extends TestCase
             'name' => $userName,
             'email' => $userEmail,
         ]);
+    }
+
+    /** @test */
+    public function it_creates_a_role_and_associates_it_to_resource_if_no_roles_previously_exist(): void
+    {
+        $this->artisan(
+            'users:create',
+            [
+                'name' => $this->faker->name,
+                'email' => $this->faker->safeEmail,
+            ]
+        )
+            ->expectsQuestion('Provide the user password', $this->faker->password)
+            ->assertExitCode(0);
+
+        $this->assertEquals(1, Role::count());
+
+        $this->assertEquals(1, User::first()->roles()->count());
     }
 
     /** @test */
