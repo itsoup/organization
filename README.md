@@ -1,6 +1,6 @@
 # ITsoup's Organization domain service
 
-![Building](https://github.com/itsoup/organization/workflows/Run%20tests/badge.svg)
+![Run tests](https://github.com/itsoup/organization/workflows/Run%20tests/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/itsoup/organization/badge.svg?branch=master)](https://coveralls.io/github/itsoup/organization?branch=master)
 
 ## Quick review
