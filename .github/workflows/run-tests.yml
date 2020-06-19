@@ -40,4 +40,7 @@ jobs:
       - name: Execute tests
         run: |
           php artisan passport:keys --no-interaction
-          vendor/bin/phpunit --testdox
+          vendor/bin/phpunit --testdox --coverage-clover build/logs/clover.xml
+
+      - name: Store test coverage report
+        run: vendor/bin/php-coveralls -v
