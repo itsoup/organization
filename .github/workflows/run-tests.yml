@@ -44,6 +44,6 @@ jobs:
 
       - name: Store test coverage report
         run: vendor/bin/php-coveralls -v
-        with:
+        env:
           COVERALLS_RUN_LOCALLY: 1
-          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
