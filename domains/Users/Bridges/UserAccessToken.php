@@ -4,6 +4,7 @@ namespace Domains\Users\Bridges;
 
 use Domains\Users\Models\User;
 use Laravel\Passport\Bridge\AccessToken as PassportAccessToken;
+use Laravel\Passport\Bridge\Scope;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
@@ -32,6 +33,9 @@ class UserAccessToken extends PassportAccessToken
             ->pluck('scopes')
             ->flatten()
             ->unique()
+            ->map(static function ($scope) {
+                return new Scope($scope);
+            })
             ->toArray();
     }
 
