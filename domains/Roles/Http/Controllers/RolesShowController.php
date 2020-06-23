@@ -22,6 +22,7 @@ class RolesShowController extends Controller
     public function __invoke(Request $request, int $roleId)
     {
         $resource = $this->roles
+            ->withTrashed()
             ->customerId($request->user()->customer_id)
             ->when($request->input('include'), static fn (Builder $roles, string $relations) => $roles->with($relations))
             ->findOrFail($roleId);

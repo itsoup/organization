@@ -62,7 +62,7 @@ class RolesShowControllerTest extends TestCase
                     'created_at' => $this->role->created_at,
                     'updated_at' => $this->role->updated_at,
                     'deleted_at' => $this->role->delete_at,
-                ]
+                ],
             ]);
     }
 
@@ -104,5 +104,18 @@ class RolesShowControllerTest extends TestCase
                     'customer',
                 ],
             ]);
+    }
+
+    /** @test */
+    public function it_shows_deleted_resources(): void
+    {
+        $this->role->delete();
+
+        Passport::actingAs($this->user, [
+            'organization:roles:view',
+        ]);
+
+        $this->getJson("/roles/{$this->role->id}")
+            ->assertOk();
     }
 }
