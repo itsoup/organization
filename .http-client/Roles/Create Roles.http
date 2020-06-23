@@ -1,0 +1,16 @@
+POST {{service_base_url}}/roles
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{oauth_access_token}}
+
+{
+    "name": "Manager Role",
+    "scopes": [
+        "organization:customers:view",
+        "organization:customers:manage",
+        "organization:roles:view",
+        "organization:roles:manage",
+        "organization:users:view",
+        "organization:users:manage"
+    ]
+}

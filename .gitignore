@@ -12,3 +12,4 @@ npm-debug.log
 yarn-error.log
 docker-compose.override.yml
 .php_cs.cache
+http-client.private.env.json

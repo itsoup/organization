@@ -1,0 +1,10 @@
+POST {{service_base_url}}/customers
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{oauth_access_token}}
+
+{
+    "name": "Another Example Company Ltd",
+    "vat_number": "123456789",
+    "country": "pt"
+}
