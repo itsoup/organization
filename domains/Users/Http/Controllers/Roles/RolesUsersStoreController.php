@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Domains\Users\Http\Requests\Roles\RoleUserStoreRequest;
 use Domains\Users\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class RolesUsersStoreController extends Controller
@@ -23,6 +22,7 @@ class RolesUsersStoreController extends Controller
     public function __invoke(RoleUserStoreRequest $request, int $userId)
     {
         $resource = $this->users
+            ->withTrashed()
             ->when(
                 $request->user()->customer_id,
                 static fn (Builder $users, int $customerId) => $users->customerId($customerId),

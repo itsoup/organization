@@ -81,8 +81,40 @@ class RolesUsersIndexControllerTest extends TestCase
                 'data' => [
                     [
                         'id' => $role->id,
-                    ]
-                ]
+                    ],
+                ],
+            ]);
+    }
+
+    /** @test */
+    public function it_lists_all_resources_attached_to_a_deleted_user(): void
+    {
+        $userToHandle = factory(User::class)
+            ->states('user', 'deleted')
+            ->create([
+                'customer_id' => $this->user->customer_id,
+            ]);
+
+        $role = factory(Role::class)->create([
+            'customer_id' => $userToHandle->customer_id,
+        ]);
+
+        $userToHandle->roles()->sync(
+            $role->id,
+        );
+
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+        ]);
+
+        $this->getJson("/users/{$userToHandle->id}/roles")
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    [
+                        'id' => $role->id,
+                    ],
+                ],
             ]);
     }
 
@@ -111,8 +143,38 @@ class RolesUsersIndexControllerTest extends TestCase
                 'data' => [
                     [
                         'id' => $role->id,
-                    ]
-                ]
+                    ],
+                ],
+            ]);
+    }
+
+    /** @test */
+    public function it_lists_all_resources_attached_to_a_deleted_system_operator(): void
+    {
+        $systemOperatorToHandle = factory(User::class)
+            ->states('system-operator', 'deleted')
+            ->create();
+
+        $role = factory(Role::class)->create([
+            'customer_id' => $systemOperatorToHandle->customer_id,
+        ]);
+
+        $systemOperatorToHandle->roles()->sync(
+            $role->id,
+        );
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+        ]);
+
+        $this->getJson("/users/{$systemOperatorToHandle->id}/roles")
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    [
+                        'id' => $role->id,
+                    ],
+                ],
             ]);
     }
 

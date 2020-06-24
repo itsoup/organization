@@ -100,10 +100,68 @@ class RolesUsersStoreControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_attaches_roles_to_deleted_users(): void
+    {
+        $payload = [
+            'roles' => [
+                $this->role->id,
+            ],
+        ];
+
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
+
+        $this->userToHandle->delete();
+
+        $this->putJson("/users/{$this->userToHandle->id}/roles", $payload)
+            ->assertNoContent();
+
+        $this->assertDatabaseHas('role_user', [
+            'user_id' => $this->userToHandle->id,
+            'role_id' => $this->role->id,
+        ]);
+    }
+
+    /** @test */
     public function it_attaches_roles_to_system_operators(): void
     {
         $systemOperatorToHandle = factory(User::class)
             ->state('system-operator')
+            ->create();
+
+        $role = factory(Role::class)->create([
+            'customer_id' => $systemOperatorToHandle->customer_id,
+        ]);
+
+        $payload = [
+            'roles' => [
+                $role->id,
+            ],
+        ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
+
+        $this->putJson("/users/{$systemOperatorToHandle->id}/roles", $payload)
+            ->assertNoContent();
+
+        $this->assertDatabaseHas('role_user', [
+            'user_id' => $systemOperatorToHandle->id,
+            'role_id' => $role->id,
+        ]);
+    }
+
+
+
+    /** @test */
+    public function it_attaches_roles_to_deleted_system_operators(): void
+    {
+        $systemOperatorToHandle = factory(User::class)
+            ->states('system-operator', 'deleted')
             ->create();
 
         $role = factory(Role::class)->create([

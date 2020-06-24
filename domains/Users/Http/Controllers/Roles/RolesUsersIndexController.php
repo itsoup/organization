@@ -22,6 +22,7 @@ class RolesUsersIndexController extends Controller
     public function __invoke(Request $request, int $userId)
     {
         $resource = $this->users
+            ->withTrashed()
             ->when(
                 $request->user()->customer_id,
                 static fn (Builder $users, int $customerId) => $users->customerId($customerId),

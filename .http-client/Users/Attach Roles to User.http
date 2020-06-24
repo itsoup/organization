@@ -1,0 +1,10 @@
+PUT {{service_base_url}}/users/2/roles
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{oauth_access_token}}
+
+{
+    "roles": [
+        1
+    ]
+}
