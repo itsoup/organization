@@ -1,0 +1,15 @@
+GET {{service_base_url}}/users
+Accept: application/json
+Authorization: Bearer {{oauth_access_token}}
+
+###
+
+GET {{service_base_url}}/users?deleted=true
+Accept: application/json
+Authorization: Bearer {{oauth_access_token}}
+
+###
+
+GET {{service_base_url}}/users?include=customer
+Accept: application/json
+Authorization: Bearer {{oauth_access_token}}

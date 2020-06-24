@@ -35,7 +35,7 @@ class UsersShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function unauthorized_users_cant_show_resources(): void
+    public function unauthorized_users_cant_view_resources(): void
     {
         Passport::actingAs($this->systemOperator);
 
@@ -44,7 +44,7 @@ class UsersShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function system_operators_can_show_any_resource(): void
+    public function system_operators_can_view_any_resource(): void
     {
         Passport::actingAs($this->systemOperator, [
             'organization:users:view',
@@ -63,7 +63,7 @@ class UsersShowControllerTest extends TestCase
                     'created_at' => $this->user->created_at,
                     'updated_at' => $this->user->updated_at,
                     'deleted_at' => $this->user->deleted_at,
-                ]
+                ],
             ]);
     }
 
@@ -84,7 +84,7 @@ class UsersShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function system_operators_can_show_other_system_operators(): void
+    public function system_operators_can_view_other_system_operators(): void
     {
         $anotherSystemOperator = factory(User::class)
             ->state('system-operator')
@@ -99,12 +99,12 @@ class UsersShowControllerTest extends TestCase
             ->assertJson([
                 'data' => [
                     'id' => $anotherSystemOperator->id,
-                ]
+                ],
             ]);
     }
 
     /** @test */
-    public function it_fails_to_show_non_existent_resources(): void
+    public function it_fails_to_view_non_existent_resources(): void
     {
         Passport::actingAs($this->systemOperator);
 
@@ -113,7 +113,7 @@ class UsersShowControllerTest extends TestCase
     }
 
     /** @test */
-    public function users_can_show_resources_of_their_customer(): void
+    public function users_can_view_resources_of_their_customer(): void
     {
         $userFromSameCustomer = factory(User::class)
             ->state('user')
@@ -138,12 +138,12 @@ class UsersShowControllerTest extends TestCase
                     'created_at' => $userFromSameCustomer->created_at,
                     'updated_at' => $userFromSameCustomer->updated_at,
                     'deleted_at' => $userFromSameCustomer->deleted_at,
-                ]
+                ],
             ]);
     }
 
     /** @test */
-    public function users_cant_show_resources_of_other_customers(): void
+    public function users_cant_view_resources_of_other_customers(): void
     {
         $userFromAnotherCustomer = factory(User::class)
             ->state('user')
@@ -155,5 +155,35 @@ class UsersShowControllerTest extends TestCase
 
         $this->getJson("/users/{$userFromAnotherCustomer->id}")
             ->assertForbidden();
+    }
+
+    /** @test */
+    public function system_operators_can_view_deleted_resources(): void
+    {
+        $this->user->delete();
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+        ]);
+
+        $this->getJson("/users/{$this->user->id}")
+            ->assertOk();
+    }
+
+    /** @test */
+    public function users_can_view_deleted_resources(): void
+    {
+        $deletedUser = factory(User::class)
+            ->states('user', 'deleted')
+            ->create([
+                'customer_id' => $this->user->customer_id,
+            ]);
+
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+        ]);
+
+        $this->getJson("/users/{$deletedUser->id}")
+            ->assertOk();
     }
 }

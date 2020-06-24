@@ -1,0 +1,10 @@
+POST {{service_base_url}}/users
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{oauth_access_token}}
+
+{
+    "name": "User Name",
+    "email": "user-email@itsoup.test",
+    "password": "123456789"
+}

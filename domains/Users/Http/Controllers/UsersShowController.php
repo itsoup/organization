@@ -23,6 +23,7 @@ class UsersShowController extends Controller
     public function __invoke(Request $request, int $userId): UserResource
     {
         $resource = $this->users
+            ->withTrashed()
             ->when($request->input('include'), static fn (Builder $users, string $relations) => $users->with($relations))
             ->findOrFail($userId);
 

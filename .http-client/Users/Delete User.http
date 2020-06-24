@@ -1,0 +1,3 @@
+DELETE {{service_base_url}}/users/2
+Accept: application/json
+Authorization: Bearer {{oauth_access_token}}
