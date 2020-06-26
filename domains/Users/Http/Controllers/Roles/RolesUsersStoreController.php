@@ -30,6 +30,8 @@ class RolesUsersStoreController extends Controller
             )
             ->findOrFail($userId);
 
+        $resource->tokens->each->revoke();
+
         $resource->roles()->syncWithoutDetaching($request->input('roles'));
 
         return new Response('', Response::HTTP_NO_CONTENT);

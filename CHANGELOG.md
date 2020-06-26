@@ -6,7 +6,7 @@ All notable changes to this repository will be documented in this file.
 
 ### Added
 
-- N/A
+- Users generated tokens are invalidated when syncing roles (#35)
 
 ### Changed
 

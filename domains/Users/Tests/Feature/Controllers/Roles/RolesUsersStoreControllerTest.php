@@ -5,12 +5,15 @@ namespace Domains\Users\Tests\Feature\Controllers\Roles;
 use Domains\Roles\Models\Role;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Passport\Passport;
+use Laravel\Passport\Token;
 use Tests\TestCase;
 
 class RolesUsersStoreControllerTest extends TestCase
 {
     use RefreshDatabase;
+    use WithFaker;
 
     private User $systemOperator;
     private User $user;
@@ -155,8 +158,6 @@ class RolesUsersStoreControllerTest extends TestCase
         ]);
     }
 
-
-
     /** @test */
     public function it_attaches_roles_to_deleted_system_operators(): void
     {
@@ -264,5 +265,32 @@ class RolesUsersStoreControllerTest extends TestCase
 
         $this->putJson("/users/{$this->user->id}/roles", $payload)
             ->assertForbidden();
+    }
+
+    /** @test */
+    public function it_invalidates_all_pre_existent_tokens_when_a_role_is_attached(): void
+    {
+        /** @var Token $token */
+        $preExistentToken = $this->userToHandle->tokens()->create([
+            'id' => $this->faker->sha1,
+            'client_id' => 1,
+            'revoked' => 0,
+        ]);
+
+        $payload = [
+            'roles' => [
+                $this->role->id,
+            ],
+        ];
+
+        Passport::actingAs($this->user, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
+
+        $this->putJson("/users/{$this->userToHandle->id}/roles", $payload)
+            ->assertNoContent();
+
+        $this->assertTrue($preExistentToken->fresh()->revoked);
     }
 }
