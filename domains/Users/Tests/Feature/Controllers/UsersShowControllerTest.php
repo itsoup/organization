@@ -63,6 +63,7 @@ class UsersShowControllerTest extends TestCase
                     'created_at' => $this->user->created_at,
                     'updated_at' => $this->user->updated_at,
                     'deleted_at' => $this->user->deleted_at,
+                    'email_verified_at' => $this->user->email_verified_at,
                 ],
             ]);
     }
@@ -138,6 +139,7 @@ class UsersShowControllerTest extends TestCase
                     'created_at' => $userFromSameCustomer->created_at,
                     'updated_at' => $userFromSameCustomer->updated_at,
                     'deleted_at' => $userFromSameCustomer->deleted_at,
+                    'email_verified_at' => $this->user->email_verified_at,
                 ],
             ]);
     }

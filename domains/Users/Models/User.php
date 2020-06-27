@@ -5,6 +5,7 @@ namespace Domains\Users\Models;
 use Domains\Customers\Models\Customer;
 use Domains\Roles\Models\Role;
 use Domains\Users\Casts\PasswordCast;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 
-class User extends Authenticatable implements UserEntityInterface
+class User extends Authenticatable implements UserEntityInterface, MustVerifyEmail
 {
     use HasApiTokens;
     use Notifiable;
@@ -90,5 +91,13 @@ class User extends Authenticatable implements UserEntityInterface
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function findForPassport(string $username): ?self
+    {
+        return $this->newModelQuery()
+            ->whereNotNull('email_verified_at')
+            ->email($username)
+            ->first();
     }
 }

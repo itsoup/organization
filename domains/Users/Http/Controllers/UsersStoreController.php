@@ -3,8 +3,9 @@
 namespace Domains\Users\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Domains\Users\Models\User;
 use Domains\Users\Http\Requests\UserStoreRequest;
+use Domains\Users\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Response;
 
 class UsersStoreController extends Controller
@@ -20,13 +21,15 @@ class UsersStoreController extends Controller
 
     public function __invoke(UserStoreRequest $request): Response
     {
-        $this->users->create([
+        $newUser = $this->users->create([
             'customer_id' => $request->input('customer_id', $request->user()->customer_id),
             'name' => $request->input('name'),
             'vat_number' => $request->input('vat_number'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
         ]);
+
+        event(new Registered($newUser));
 
         return new Response('', Response::HTTP_CREATED);
     }

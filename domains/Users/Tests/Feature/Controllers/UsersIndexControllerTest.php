@@ -72,6 +72,7 @@ class UsersIndexControllerTest extends TestCase
                         'created_at',
                         'updated_at',
                         'deleted_at',
+                        'email_verified_at',
                     ],
                 ],
                 'links' => [
@@ -123,6 +124,7 @@ class UsersIndexControllerTest extends TestCase
                         'created_at',
                         'updated_at',
                         'deleted_at',
+                        'email_verified_at',
                     ],
                 ],
                 'links' => [

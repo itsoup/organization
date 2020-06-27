@@ -23,10 +23,14 @@ $factory->state(User::class, 'system-operator', [
     'customer_id' => null,
 ]);
 
-$factory->state(User::class, 'user', static fn () => [
+$factory->state(User::class, 'user', [
     'customer_id' => static fn () => factory(Customer::class)->create(),
 ]);
 
 $factory->state(User::class, 'deleted', [
     'deleted_at' => now(),
+]);
+
+$factory->state(User::class, 'unverified', [
+    'email_verified_at' => null,
 ]);

@@ -6,6 +6,7 @@ use Domains\Roles\Models\Role;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Laravel\Passport\Client;
 use Lcobucci\JWT\Parser;
@@ -68,5 +69,24 @@ class AccessTokenControllerIssueTokenTest extends TestCase
         $this->assertEquals($this->user->email, $decodedJwt->getClaim('email'));
         $this->assertEquals($this->user->account_type, $decodedJwt->getClaim('account_type'));
         $this->assertEquals($this->role->scopes, $decodedJwt->getClaim('scopes'));
+    }
+
+    /** @test */
+    public function it_doesnt_issues_jwt_to_unverified_users(): void
+    {
+        $unverifiedUser = factory(User::class)
+            ->states('user', 'unverified')
+            ->create([
+                'password' => 'secret',
+            ]);
+
+        $this->postJson('/oauth/token', [
+            'grant_type' => 'password',
+            'client_id' => $this->passportClient->id,
+            'client_secret' => $this->passportClient->secret,
+            'username' => $unverifiedUser->email,
+            'password' => 'secret',
+        ])
+            ->assertStatus(Response::HTTP_BAD_REQUEST);
     }
 }
