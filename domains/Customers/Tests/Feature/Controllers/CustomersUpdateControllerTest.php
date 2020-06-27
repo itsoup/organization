@@ -199,6 +199,8 @@ class CustomersUpdateControllerTest extends TestCase
     /** @test */
     public function it_keeps_current_resource_logo_if_a_new_one_is_not_sent(): void
     {
+        Storage::fake();
+
         $this->customer->update([
             'logo' => UploadedFile::fake()->image('logo.png')->store('customers'),
         ]);
