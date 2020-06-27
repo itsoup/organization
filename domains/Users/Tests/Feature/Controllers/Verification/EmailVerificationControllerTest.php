@@ -6,6 +6,7 @@ namespace Domains\Users\Tests\Feature\Controllers\Verification;
 use Domains\Users\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
@@ -16,6 +17,7 @@ use Tests\TestCase;
 class EmailVerificationControllerTest extends TestCase
 {
     use RefreshDatabase;
+    use WithFaker;
 
     private User $user;
 
@@ -77,5 +79,21 @@ class EmailVerificationControllerTest extends TestCase
             ->assertNoContent();
 
         $this->assertTrue($this->user->fresh()->hasVerifiedEmail());
+    }
+
+    /** @test */
+    public function it_fails_if_hash_is_not_of_the_given_user(): void
+    {
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+            [
+                'id' => $this->user->getKey(),
+                'hash' => sha1($this->faker->safeEmail),
+            ]
+        );
+
+        $this->getJson($verificationUrl)
+            ->assertForbidden();
     }
 }
