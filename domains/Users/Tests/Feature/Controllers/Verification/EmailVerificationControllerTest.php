@@ -35,7 +35,7 @@ class EmailVerificationControllerTest extends TestCase
     {
         $hash = Str::random();
 
-        $this->getJson("/email/verify/{$this->user->id}/{$hash}")
+        $this->get("/email/verify/{$this->user->id}/{$hash}")
             ->assertForbidden();
     }
 
@@ -53,12 +53,15 @@ class EmailVerificationControllerTest extends TestCase
             ]
         );
 
-        $this->getJson($verificationUrl)
-            ->assertNoContent();
+        $this->get($verificationUrl)
+            ->assertRedirect()
+            ->assertSessionDoesntHaveErrors();
 
         $this->assertTrue($this->user->fresh()->hasVerifiedEmail());
 
-        Event::assertDispatched(fn (Verified $event) => $event->user->is($this->user));
+        Event::assertDispatched(
+            fn (Verified $event) => $event->user->is($this->user)
+        );
     }
 
     /** @test */
@@ -75,8 +78,9 @@ class EmailVerificationControllerTest extends TestCase
             ]
         );
 
-        $this->getJson($verificationUrl)
-            ->assertNoContent();
+        $this->get($verificationUrl)
+            ->assertRedirect()
+            ->assertSessionDoesntHaveErrors();
 
         $this->assertTrue($this->user->fresh()->hasVerifiedEmail());
     }
@@ -93,7 +97,7 @@ class EmailVerificationControllerTest extends TestCase
             ]
         );
 
-        $this->getJson($verificationUrl)
+        $this->get($verificationUrl)
             ->assertForbidden();
     }
 }

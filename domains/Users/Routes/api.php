@@ -7,10 +7,7 @@ use Domains\Users\Http\Controllers\UsersIndexController;
 use Domains\Users\Http\Controllers\UsersShowController;
 use Domains\Users\Http\Controllers\UsersStoreController;
 use Domains\Users\Http\Controllers\UsersUpdateController;
-use Domains\Users\Http\Controllers\Verification\EmailVerificationController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/email/verify/{id}/{hash}', EmailVerificationController::class)->name('verification.verify');
 
 Route::get('/users', UsersIndexController::class)->name('users.index');
 Route::post('/users', UsersStoreController::class)->name('users.store');

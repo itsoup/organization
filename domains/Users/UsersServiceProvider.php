@@ -2,8 +2,8 @@
 
 namespace Domains\Users;
 
-use Domains\Users\Console\Commands\UsersCreateCommand;
 use Domains\Users\Bridges\AccessTokenRepository;
+use Domains\Users\Console\Commands\UsersCreateCommand;
 use Domains\Users\Models\User;
 use Domains\Users\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -39,6 +39,9 @@ class UsersServiceProvider extends ServiceProvider
 
     private function bootRoutes(): void
     {
+        Route::middleware('web')
+            ->group(fn () => $this->loadRoutesFrom(__DIR__ . '/Routes/web.php'));
+
         Route::middleware('api')
             ->group(fn () => $this->loadRoutesFrom(__DIR__ . '/Routes/api.php'));
     }

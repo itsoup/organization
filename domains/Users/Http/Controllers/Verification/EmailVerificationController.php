@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use Domains\Users\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class EmailVerificationController extends Controller
 {
@@ -15,12 +15,12 @@ class EmailVerificationController extends Controller
 
     public function __construct(User $users)
     {
-        $this->middleware('signed');
+        $this->middleware(['signed']);
 
         $this->users = $users;
     }
 
-    public function __invoke(Request $request, int $userId, string $hash): Response
+    public function __invoke(Request $request, int $userId, string $hash): RedirectResponse
     {
         $user = $this->users->findOrFail($userId);
 
@@ -29,13 +29,13 @@ class EmailVerificationController extends Controller
         }
 
         if ($user->hasVerifiedEmail()) {
-            return new Response('', 204);
+            return back();
         }
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
 
-        return new Response('', 204);
+        return back();
     }
 }
