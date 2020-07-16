@@ -8,6 +8,7 @@ All notable changes to this repository will be documented in this file.
 
 - Users generated tokens are invalidated when syncing roles (#35)
 - A newly created User must verify their email before being able to login (#36)
+- An authenticated User can access his own account information (#37)
 
 ### Changed
 
