@@ -99,9 +99,11 @@ class RolesShowControllerTest extends TestCase
 
         $this->getJson("/roles/{$this->role->id}?include=customer")
             ->assertOk()
-            ->assertJsonStructure([
+            ->assertJson([
                 'data' => [
-                    'customer',
+                    'customer' => [
+                        'id' => $this->role->customer_id,
+                    ],
                 ],
             ]);
     }
