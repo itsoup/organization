@@ -2,7 +2,6 @@
 
 namespace Domains\Users\Tests\Feature\Controllers\Me;
 
-use Domains\Customers\Models\Customer;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
@@ -56,17 +55,14 @@ class MeShowControllerTest extends TestCase
     /** @test */
     public function it_includes_authenticated_user_customer_information_if_available(): void
     {
-        $customer = factory(Customer::class)->create();
-        $this->user->customer()->associate($customer);
-
         Passport::actingAs($this->user);
 
-        $this->getJson('/me')
+        $this->getJson('/me?include=customer')
             ->assertOk()
             ->assertJson([
                 'data' => [
                     'customer' => [
-                        'id' => $customer->id,
+                        'id' => $this->user->customer_id,
                     ],
                 ],
             ]);
