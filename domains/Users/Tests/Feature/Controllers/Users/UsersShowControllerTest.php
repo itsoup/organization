@@ -77,9 +77,11 @@ class UsersShowControllerTest extends TestCase
 
         $this->getJson("/users/{$this->user->id}?include=customer")
             ->assertOk()
-            ->assertJsonStructure([
+            ->assertJson([
                 'data' => [
-                    'customer',
+                    'customer' => [
+                        'id' => $this->user->customer_id,
+                    ],
                 ],
             ]);
     }
