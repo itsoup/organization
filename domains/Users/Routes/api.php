@@ -1,5 +1,6 @@
 <?php
 
+use Domains\Users\Http\Controllers\Me\MeShowController;
 use Domains\Users\Http\Controllers\Roles\RolesUsersIndexController;
 use Domains\Users\Http\Controllers\Roles\RolesUsersStoreController;
 use Domains\Users\Http\Controllers\Users\UsersDeleteController;
@@ -17,3 +18,5 @@ Route::delete('/users/{userId}', UsersDeleteController::class)->name('users.dele
 
 Route::get('/users/{userId}/roles', RolesUsersIndexController::class)->name('users_roles.index');
 Route::put('/users/{userId}/roles', RolesUsersStoreController::class)->name('users_roles.store');
+
+Route::get('/me', MeShowController::class)->name('me');
