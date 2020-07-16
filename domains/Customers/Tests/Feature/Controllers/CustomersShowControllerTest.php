@@ -55,7 +55,14 @@ class CustomersShowControllerTest extends TestCase
 
         $this->getJson("/customers/{$this->customer->id}")
             ->assertOk()
-            ->assertExactJson([
+            ->assertJsonStructure([
+                'data' => [
+                    'created_at',
+                    'updated_at',
+                    'deleted_at',
+                ],
+            ])
+            ->assertJson([
                 'data' => [
                     'id' => $this->customer->id,
                     'name' => $this->customer->name,
@@ -63,9 +70,6 @@ class CustomersShowControllerTest extends TestCase
                     'address' => $this->customer->address,
                     'logo' => $this->customer->logo,
                     'country' => $this->customer->country,
-                    'created_at' => $this->customer->created_at,
-                    'updated_at' => $this->customer->updated_at,
-                    'deleted_at' => $this->customer->deleted_at,
                 ],
             ]);
     }

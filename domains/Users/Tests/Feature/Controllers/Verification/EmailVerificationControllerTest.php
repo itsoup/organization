@@ -57,7 +57,7 @@ class EmailVerificationControllerTest extends TestCase
             ->assertRedirect()
             ->assertSessionDoesntHaveErrors();
 
-        $this->assertTrue($this->user->fresh()->hasVerifiedEmail());
+        self::assertTrue($this->user->fresh()->hasVerifiedEmail());
 
         Event::assertDispatched(
             fn (Verified $event) => $event->user->is($this->user)
@@ -82,7 +82,7 @@ class EmailVerificationControllerTest extends TestCase
             ->assertRedirect()
             ->assertSessionDoesntHaveErrors();
 
-        $this->assertTrue($this->user->fresh()->hasVerifiedEmail());
+        self::assertTrue($this->user->fresh()->hasVerifiedEmail());
     }
 
     /** @test */

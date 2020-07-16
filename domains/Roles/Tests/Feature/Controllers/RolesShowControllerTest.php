@@ -53,15 +53,19 @@ class RolesShowControllerTest extends TestCase
 
         $this->getJson("/roles/{$this->role->id}")
             ->assertOk()
-            ->assertExactJson([
+            ->assertJsonStructure([
+                'data' => [
+                    'created_at',
+                    'updated_at',
+                    'deleted_at',
+                ],
+            ])
+            ->assertJson([
                 'data' => [
                     'id' => $this->role->id,
                     'customer_id' => $this->role->customer_id,
                     'name' => $this->role->name,
                     'scopes' => $this->role->scopes,
-                    'created_at' => $this->role->created_at,
-                    'updated_at' => $this->role->updated_at,
-                    'deleted_at' => $this->role->delete_at,
                 ],
             ]);
     }

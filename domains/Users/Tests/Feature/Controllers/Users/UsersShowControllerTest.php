@@ -130,6 +130,14 @@ class UsersShowControllerTest extends TestCase
 
         $this->getJson("/users/{$userFromSameCustomer->id}")
             ->assertOk()
+            ->assertJsonStructure([
+                'data' => [
+                    'created_at',
+                    'updated_at',
+                    'deleted_at',
+                    'email_verified_at',
+                ],
+            ])
             ->assertExactJson([
                 'data' => [
                     'id' => $userFromSameCustomer->id,
@@ -138,10 +146,6 @@ class UsersShowControllerTest extends TestCase
                     'name' => $userFromSameCustomer->name,
                     'email' => $userFromSameCustomer->email,
                     'phone' => $userFromSameCustomer->phone,
-                    'created_at' => $userFromSameCustomer->created_at,
-                    'updated_at' => $userFromSameCustomer->updated_at,
-                    'deleted_at' => $userFromSameCustomer->deleted_at,
-                    'email_verified_at' => $this->user->email_verified_at,
                 ],
             ]);
     }

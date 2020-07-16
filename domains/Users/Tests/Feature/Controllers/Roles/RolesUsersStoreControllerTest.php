@@ -291,6 +291,6 @@ class RolesUsersStoreControllerTest extends TestCase
         $this->putJson("/users/{$this->userToHandle->id}/roles", $payload)
             ->assertNoContent();
 
-        $this->assertTrue($preExistentToken->fresh()->revoked);
+        self::assertTrue($preExistentToken->fresh()->revoked);
     }
 }

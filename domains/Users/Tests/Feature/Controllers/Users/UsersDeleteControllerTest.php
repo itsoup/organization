@@ -125,7 +125,7 @@ class UsersDeleteControllerTest extends TestCase
         $this->deleteJson("users/{$userToDelete->id}")
             ->assertNoContent();
 
-        $this->assertTrue($userToDelete->fresh()->trashed());
+        self::assertTrue($userToDelete->fresh()->trashed());
     }
 
     /** @test */
@@ -144,7 +144,7 @@ class UsersDeleteControllerTest extends TestCase
         $this->deleteJson("users/{$userToDelete->id}")
             ->assertForbidden();
 
-        $this->assertFalse($userToDelete->fresh()->trashed());
+        self::assertFalse($userToDelete->fresh()->trashed());
     }
 
     /** @test */

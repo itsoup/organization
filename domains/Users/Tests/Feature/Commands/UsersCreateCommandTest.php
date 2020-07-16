@@ -47,7 +47,7 @@ class UsersCreateCommandTest extends TestCase
         /** @var User $newUser */
         $newUser = User::email($userEmail)->first();
 
-        $this->assertTrue(
+        self::assertTrue(
             Hash::check($userPassword, $newUser->password)
         );
     }
@@ -92,9 +92,9 @@ class UsersCreateCommandTest extends TestCase
             ->expectsQuestion('Provide the user password', $this->faker->password)
             ->assertExitCode(0);
 
-        $this->assertEquals(1, Role::count());
+        self::assertEquals(1, Role::count());
 
-        $this->assertEquals(1, User::first()->roles()->count());
+        self::assertEquals(1, User::first()->roles()->count());
     }
 
     /** @test */

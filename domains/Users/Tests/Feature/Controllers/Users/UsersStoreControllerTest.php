@@ -79,13 +79,13 @@ class UsersStoreControllerTest extends TestCase
         $newUser = User::email($payload['email'])->first();
 
         Notification::assertSentTo($newUser, VerifyEmail::class);
-        $this->assertFalse($newUser->hasVerifiedEmail());
+        self::assertFalse($newUser->hasVerifiedEmail());
 
-        $this->assertTrue(
+        self::assertTrue(
             Hash::check($payload['password'], $newUser->password)
         );
 
-        $this->assertTrue($newUser->isSystemOperator());
+        self::assertTrue($newUser->isSystemOperator());
     }
 
     /** @test */
@@ -149,13 +149,13 @@ class UsersStoreControllerTest extends TestCase
         $newUser = User::email($payload['email'])->first();
 
         Notification::assertSentTo($newUser, VerifyEmail::class);
-        $this->assertFalse($newUser->hasVerifiedEmail());
+        self::assertFalse($newUser->hasVerifiedEmail());
 
-        $this->assertTrue(
+        self::assertTrue(
             Hash::check($payload['password'], $newUser->password)
         );
 
-        $this->assertTrue($newUser->isUser());
+        self::assertTrue($newUser->isUser());
     }
 
     /** @test */
@@ -187,13 +187,13 @@ class UsersStoreControllerTest extends TestCase
         $newUser = User::email($payload['email'])->first();
 
         Notification::assertSentTo($newUser, VerifyEmail::class);
-        $this->assertFalse($newUser->hasVerifiedEmail());
+        self::assertFalse($newUser->hasVerifiedEmail());
 
-        $this->assertTrue(
+        self::assertTrue(
             Hash::check($payload['password'], $newUser->password)
         );
 
-        $this->assertTrue($newUser->isUser());
+        self::assertTrue($newUser->isUser());
     }
 
     /** @test */

@@ -25,11 +25,11 @@ class RoleModelTest extends TestCase
     /** @test */
     public function it_has_required_properties(): void
     {
-        $this->assertNull($this->model->customer_id);
-        $this->assertIsString($this->model->name);
+        self::assertNull($this->model->customer_id);
+        self::assertIsString($this->model->name);
 
-        $this->assertIsArray($this->model->scopes);
-        $this->assertEquals(
+        self::assertIsArray($this->model->scopes);
+        self::assertEquals(
             [
                 'organization:customers:view',
                 'organization:customers:manage',
@@ -41,40 +41,40 @@ class RoleModelTest extends TestCase
             $this->model->scopes
         );
 
-        $this->assertInstanceOf(Carbon::class, $this->model->created_at);
-        $this->assertInstanceOf(Carbon::class, $this->model->updated_at);
-        $this->assertNull($this->model->deleted_at);
+        self::assertInstanceOf(Carbon::class, $this->model->created_at);
+        self::assertInstanceOf(Carbon::class, $this->model->updated_at);
+        self::assertNull($this->model->deleted_at);
     }
     /** @test */
     public function it_uses_timestamps(): void
     {
-        $this->assertTrue($this->model->usesTimestamps());
+        self::assertTrue($this->model->usesTimestamps());
 
-        $this->assertEquals('created_at', $this->model->getCreatedAtColumn());
-        $this->assertEquals('updated_at', $this->model->getUpdatedAtColumn());
+        self::assertEquals('created_at', $this->model->getCreatedAtColumn());
+        self::assertEquals('updated_at', $this->model->getUpdatedAtColumn());
     }
 
     /** @test */
     public function it_uses_soft_deletes(): void
     {
-        $this->assertArrayHasKey(SoftDeletingScope::class, $this->model->getGlobalScopes());
+        self::assertArrayHasKey(SoftDeletingScope::class, $this->model->getGlobalScopes());
     }
 
     /** @test */
     public function it_cats_scopes_as_array(): void
     {
-        $this->assertTrue($this->model->hasCast('scopes', 'array'));
+        self::assertTrue($this->model->hasCast('scopes', 'array'));
     }
 
     /** @test */
     public function it_has_users_relation(): void
     {
-        $this->assertInstanceOf(User::class, $this->model->users()->getModel());
+        self::assertInstanceOf(User::class, $this->model->users()->getModel());
     }
 
     /** @test */
     public function it_has_customer_relation(): void
     {
-        $this->assertInstanceOf(Customer::class, $this->model->customer()->getModel());
+        self::assertInstanceOf(Customer::class, $this->model->customer()->getModel());
     }
 }

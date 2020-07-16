@@ -36,7 +36,15 @@ class MeShowControllerTest extends TestCase
 
         $this->getJson('/me')
             ->assertOk()
-            ->assertExactJson([
+            ->assertJsonStructure([
+                'data' => [
+                    'created_at',
+                    'updated_at',
+                    'deleted_at',
+                    'email_verified_at',
+                ],
+            ])
+            ->assertJson([
                 'data' => [
                     'id' => $this->user->id,
                     'customer_id' => $this->user->customer_id,
@@ -44,10 +52,6 @@ class MeShowControllerTest extends TestCase
                     'name' => $this->user->name,
                     'email' => $this->user->email,
                     'phone' => $this->user->phone,
-                    'created_at' => $this->user->created_at,
-                    'updated_at' => $this->user->updated_at,
-                    'deleted_at' => $this->user->deleted_at,
-                    'email_verified_at' => $this->user->email_verified_at,
                 ],
             ]);
     }
