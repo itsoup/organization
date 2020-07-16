@@ -2,11 +2,11 @@
 
 use Domains\Users\Http\Controllers\Roles\RolesUsersIndexController;
 use Domains\Users\Http\Controllers\Roles\RolesUsersStoreController;
-use Domains\Users\Http\Controllers\UsersDeleteController;
-use Domains\Users\Http\Controllers\UsersIndexController;
-use Domains\Users\Http\Controllers\UsersShowController;
-use Domains\Users\Http\Controllers\UsersStoreController;
-use Domains\Users\Http\Controllers\UsersUpdateController;
+use Domains\Users\Http\Controllers\Users\UsersDeleteController;
+use Domains\Users\Http\Controllers\Users\UsersIndexController;
+use Domains\Users\Http\Controllers\Users\UsersShowController;
+use Domains\Users\Http\Controllers\Users\UsersStoreController;
+use Domains\Users\Http\Controllers\Users\UsersUpdateController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/users', UsersIndexController::class)->name('users.index');

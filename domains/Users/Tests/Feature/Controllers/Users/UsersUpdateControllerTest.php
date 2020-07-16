@@ -1,6 +1,6 @@
 <?php
 
-namespace Domains\Users\Tests\Feature\Controllers;
+namespace Domains\Users\Tests\Feature\Controllers\Users;
 
 use Domains\Customers\Models\Customer;
 use Domains\Users\Models\User;
