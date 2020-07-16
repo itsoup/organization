@@ -138,7 +138,7 @@ class UsersShowControllerTest extends TestCase
                     'email_verified_at',
                 ],
             ])
-            ->assertExactJson([
+            ->assertJson([
                 'data' => [
                     'id' => $userFromSameCustomer->id,
                     'customer_id' => $userFromSameCustomer->customer_id,
