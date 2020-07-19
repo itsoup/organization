@@ -3,7 +3,7 @@
 namespace Domains\Users\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
-use Domains\Users\Http\Requests\UserStoreRequest;
+use Domains\Users\Http\Requests\Users\UserStoreRequest;
 use Domains\Users\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Response;

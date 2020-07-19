@@ -3,7 +3,7 @@
 namespace Domains\Users\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
-use Domains\Users\Http\Requests\UserUpdateRequest;
+use Domains\Users\Http\Requests\Users\UserUpdateRequest;
 use Domains\Users\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response;
