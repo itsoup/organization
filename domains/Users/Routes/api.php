@@ -2,6 +2,7 @@
 
 use Domains\Users\Http\Controllers\Me\MeShowController;
 use Domains\Users\Http\Controllers\Me\MeUpdateController;
+use Domains\Users\Http\Controllers\Me\MeTokensIndexController;
 use Domains\Users\Http\Controllers\Roles\RolesUsersIndexController;
 use Domains\Users\Http\Controllers\Roles\RolesUsersStoreController;
 use Domains\Users\Http\Controllers\Users\UsersDeleteController;
@@ -22,3 +23,5 @@ Route::put('/users/{userId}/roles', RolesUsersStoreController::class)->name('use
 
 Route::get('/me', MeShowController::class)->name('me.show');
 Route::patch('/me', MeUpdateController::class)->name('me.update');
+
+Route::get('/me/tokens', MeTokensIndexController::class)->name('me_tokens.index');
