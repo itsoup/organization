@@ -27,6 +27,7 @@ class UsersStoreController extends Controller
             'vat_number' => $request->input('vat_number'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
+            'phone' => $request->input('phone'),
         ]);
 
         event(new Registered($newUser));

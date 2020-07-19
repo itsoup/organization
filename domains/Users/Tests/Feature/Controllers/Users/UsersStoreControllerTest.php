@@ -64,6 +64,8 @@ class UsersStoreControllerTest extends TestCase
             'name' => $this->faker->name,
             'email' => $this->faker->safeEmail,
             'password' => 'password',
+            'vat_number' => $this->faker->countryCode . $this->faker->randomNumber(9),
+            'phone' => $this->faker->e164PhoneNumber,
         ];
 
         $this->postJson('/users', $payload)
@@ -73,6 +75,8 @@ class UsersStoreControllerTest extends TestCase
             'customer_id' => null,
             'name' => $payload['name'],
             'email' => $payload['email'],
+            'vat_number' => $payload['vat_number'],
+            'phone' => $payload['phone'],
         ]);
 
         /** @var User $newUser */
@@ -167,6 +171,8 @@ class UsersStoreControllerTest extends TestCase
             'name' => $this->faker->name,
             'email' => $this->faker->safeEmail,
             'password' => 'password',
+            'vat_number' => $this->faker->countryCode . $this->faker->randomNumber(9),
+            'phone' => $this->faker->e164PhoneNumber,
         ];
 
         Passport::actingAs($this->user, [
@@ -181,6 +187,8 @@ class UsersStoreControllerTest extends TestCase
             'customer_id' => $this->user->customer_id,
             'name' => $payload['name'],
             'email' => $payload['email'],
+            'vat_number' => $payload['vat_number'],
+            'phone' => $payload['phone'],
         ]);
 
         /** @var User $newUser */
