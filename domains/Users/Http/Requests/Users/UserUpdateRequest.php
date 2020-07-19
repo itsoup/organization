@@ -4,6 +4,7 @@ namespace Domains\Users\Http\Requests\Users;
 
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -27,7 +28,7 @@ class UserUpdateRequest extends FormRequest
             'email' => [
                 'filled',
                 'email',
-                'unique:users',
+                Rule::unique(User::class)->ignore($this->route('userId')),
             ],
             'customer_id' => [
                 'sometimes',
@@ -36,7 +37,7 @@ class UserUpdateRequest extends FormRequest
             ],
             'vat_number' => [
                 'sometimes',
-                'unique:users,vat_number,' . $this->route('userId'),
+                Rule::unique(User::class)->ignore($this->route('userId')),
             ],
         ];
     }

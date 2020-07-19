@@ -219,7 +219,6 @@ class UsersUpdateControllerTest extends TestCase
     /** @test */
     public function it_fails_if_email_is_sent_empty(): void
     {
-
         $payload = [
             'name' => $this->faker->name,
             'email' => '',
@@ -232,6 +231,23 @@ class UsersUpdateControllerTest extends TestCase
 
         $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
             ->assertJsonValidationErrors(['email']);
+    }
+
+    /** @test */
+    public function it_updates_resource_ignoring_its_email_uniqueness(): void
+    {
+        $payload = [
+            'name' => $this->faker->name,
+            'email' => $this->userToUpdate->email,
+        ];
+
+        Passport::actingAs($this->systemOperator, [
+            'organization:users:view',
+            'organization:users:manage',
+        ]);
+
+        $this->patchJson("/users/{$this->userToUpdate->id}", $payload)
+            ->assertNoContent();
     }
 
     /** @test */
