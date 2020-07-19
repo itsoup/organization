@@ -5,6 +5,6 @@ Authorization: Bearer {{oauth_access_token}}
 
 {
     "name": "User Name",
-    "email": "user-email@itsoup.test",
+    "email": "user-email-2@itsoup.test",
     "password": "123456789"
 }
