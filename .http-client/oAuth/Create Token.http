@@ -6,7 +6,7 @@ Content-Type: application/json
     "grant_type": "password",
     "client_id": "{{oauth_grant_client_id}}",
     "client_secret": "{{oauth_grant_client_secret}}",
-    "username": "iamjosepostiga@gmail.com",
+    "username": "me@josepostiga.com",
     "password": "123456789"
 }
 
