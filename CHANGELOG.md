@@ -6,11 +6,7 @@ All notable changes to this repository will be documented in this file.
 
 ### Added
 
-- Users generated tokens are invalidated when syncing roles (#35)
-- A newly created User must verify their email before being able to login (#36)
-- An authenticated User can access his own account information (#37)
-- An authenticated User can edit his own account information (#39)
-- An authenticated User can list all of his issued tokens (#38)
+- N/A
 
 ### Changed
 
@@ -31,6 +27,17 @@ All notable changes to this repository will be documented in this file.
 ### Security
 
 - N/A
+
+## 1.0.0-rc1 - 2020-07-25
+
+### Added
+
+- Users generated tokens are invalidated when syncing roles (#35)
+- A newly created User must verify their email before being able to login (#36)
+- An authenticated User can access his own account information (#37)
+- An authenticated User can edit his own account information (#39)
+- An authenticated User can list all of his issued tokens (#38)
+- An authenticated User can delete an issued tokens (#40)
 
 ## 1.0.0-beta - 2020-06-24
 
