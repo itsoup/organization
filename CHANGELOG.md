@@ -18,7 +18,7 @@ All notable changes to this repository will be documented in this file.
 
 ### Removed
 
-- N/A
+- `.http-client` folder for practical API calls collections' storing.
 
 ### Fixed
 
