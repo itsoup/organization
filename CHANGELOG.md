@@ -6,7 +6,7 @@ All notable changes to this repository will be documented in this file.
 
 ### Added
 
-- N/A
+- Scopes to Roles resource to be used by the new Asset Active Directory domain service (#41)
 
 ### Changed
 
