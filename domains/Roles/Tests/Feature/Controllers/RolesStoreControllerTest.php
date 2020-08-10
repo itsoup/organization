@@ -16,6 +16,30 @@ class RolesStoreControllerTest extends TestCase
     private User $systemOperator;
     private User $user;
 
+    public function rolesScopesProvider(): array
+    {
+        return [
+            'Organization Scopes' => [
+                [
+                    'organization:roles:view',
+                    'organization:roles:manage',
+                    'organization:users:view',
+                    'organization:users:manage',
+                ],
+            ],
+            'Assets Active Directory Scopes' => [
+                [
+                    'assets-active-directory:locations:view',
+                    'assets-active-directory:locations:manage',
+                    'assets-active-directory:assets:view',
+                    'assets-active-directory:assets:manage',
+                    'assets-active-directory:properties:view',
+                    'assets-active-directory:properties:manage',
+                ],
+            ],
+        ];
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -55,7 +79,8 @@ class RolesStoreControllerTest extends TestCase
 
         $this->postJson('/roles')
             ->assertJsonValidationErrors([
-                'name', 'scopes',
+                'name',
+                'scopes',
             ]);
     }
 
@@ -80,15 +105,17 @@ class RolesStoreControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
-    public function users_can_store_new_resources_automatically_associated_with_their_customer_id(): void
+    /**
+     * @test
+     * @dataProvider rolesScopesProvider
+     *
+     * @param array $scopes
+     */
+    public function users_can_store_new_resources_automatically_associated_with_their_customer_id(array $scopes): void
     {
         $payload = [
             'name' => $this->faker->name,
-            'scopes' => [
-                'organization:roles:view',
-                'organization:roles:manage',
-            ],
+            'scopes' => $scopes,
         ];
 
         Passport::actingAs($this->user, [
@@ -106,15 +133,17 @@ class RolesStoreControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function system_operators_can_store_new_resources_automatically_associated_with_their_customer_id(): void
+    /**
+     * @test
+     * @dataProvider rolesScopesProvider
+     *
+     * @param array $scopes
+     */
+    public function system_operators_can_store_new_resources_automatically_associated_with_their_customer_id(array $scopes): void
     {
         $payload = [
             'name' => $this->faker->name,
-            'scopes' => [
-                'organization:roles:view',
-                'organization:roles:manage',
-            ],
+            'scopes' => $scopes,
         ];
 
         Passport::actingAs($this->systemOperator, [
@@ -142,6 +171,8 @@ class RolesStoreControllerTest extends TestCase
                 'organization:customers:manage',
                 'organization:roles:view',
                 'organization:roles:manage',
+                'organization:users:view',
+                'organization:users:manage',
             ],
         ];
 
@@ -152,7 +183,8 @@ class RolesStoreControllerTest extends TestCase
 
         $this->postJson('/roles', $payload)
             ->assertJsonValidationErrors([
-                'scopes.0', 'scopes.1',
+                'scopes.0',
+                'scopes.1',
             ]);
     }
 
@@ -166,6 +198,8 @@ class RolesStoreControllerTest extends TestCase
                 'organization:customers:manage',
                 'organization:roles:view',
                 'organization:roles:manage',
+                'organization:users:view',
+                'organization:users:manage',
             ],
         ];
 

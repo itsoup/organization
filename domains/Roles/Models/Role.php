@@ -21,6 +21,12 @@ class Role extends Model
         'organization:roles:manage',
         'organization:users:view',
         'organization:users:manage',
+        'assets-active-directory:locations:view',
+        'assets-active-directory:locations:manage',
+        'assets-active-directory:assets:view',
+        'assets-active-directory:assets:manage',
+        'assets-active-directory:properties:view',
+        'assets-active-directory:properties:manage',
     ];
 
     protected $casts = [
