@@ -1,9 +1,0 @@
-GET {{service_base_url}}/roles/2
-Accept: application/json
-Authorization: Bearer {{oauth_access_token}}
-
-###
-
-GET {{service_base_url}}/roles/2?include=customer
-Accept: application/json
-Authorization: Bearer {{oauth_access_token}}

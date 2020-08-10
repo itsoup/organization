@@ -1,4 +1,0 @@
-GET {{service_base_url}}/customers/3
-Accept: application/json
-Authorization: Bearer {{oauth_access_token}}
-

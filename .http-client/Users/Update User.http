@@ -1,8 +1,0 @@
-PATCH {{service_base_url}}/users/3
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{oauth_access_token}}
-
-{
-    "name": "EDITED User"
-}

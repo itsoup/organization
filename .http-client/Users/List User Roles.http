@@ -1,3 +1,0 @@
-GET {{service_base_url}}/users/2/roles
-Accept: application/json
-Authorization: Bearer {{oauth_access_token}}

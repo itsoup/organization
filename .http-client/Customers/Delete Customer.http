@@ -1,3 +1,0 @@
-DELETE {{service_base_url}}/customers/2
-Accept: application/json
-Authorization: Bearer {{oauth_access_token}}

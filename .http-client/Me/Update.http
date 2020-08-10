@@ -1,9 +1,0 @@
-PATCH {{service_base_url}}/me
-Accept: application/json
-Authorization: Bearer {{oauth_access_token}}
-Content-Type: application/json
-
-{
-    "vat_number": "PT123456789",
-    "email": "me@josepostiga.com"
-}

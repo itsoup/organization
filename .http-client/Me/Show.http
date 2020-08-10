@@ -1,9 +1,0 @@
-GET {{service_base_url}}/me
-Accept: application/json
-Authorization: Bearer {{oauth_access_token}}
-
-###
-
-GET {{service_base_url}}/me?include=customer
-Accept: application/json
-Authorization: Bearer {{oauth_access_token}}

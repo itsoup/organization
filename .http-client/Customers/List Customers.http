@@ -1,9 +1,0 @@
-GET {{service_base_url}}/customers
-Accept: application/json
-Authorization: Bearer {{oauth_access_token}}
-
-###
-
-GET {{service_base_url}}/customers?deleted=true
-Accept: application/json
-Authorization: Bearer {{oauth_access_token}}

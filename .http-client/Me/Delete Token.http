@@ -1,3 +1,0 @@
-DELETE {{service_base_url}}/me/tokens/e6830aab86a1249bbadae9686a4a1041d471c3c90005b8a414b718438b25dfd9fa6c4ff0a91683e1
-Accept: application/json
-Authorization: Bearer {{oauth_access_token}}
