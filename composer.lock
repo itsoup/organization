@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e04be6b497faf35473f7584f35f1ebb",
+    "content-hash": "edb9b7f3f4c1c4b52ce706c53936856c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1073,6 +1073,69 @@
                 "versions"
             ],
             "time": "2020-06-23T06:23:06+00:00"
+        },
+        {
+            "name": "josepostiga/larabeat",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/josepostiga/larabeat.git",
+                "reference": "0fbac8d6313b8fd01e9698a18c8072d9a0bfbfe5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/josepostiga/larabeat/zipball/0fbac8d6313b8fd01e9698a18c8072d9a0bfbfe5",
+                "reference": "0fbac8d6313b8fd01e9698a18c8072d9a0bfbfe5",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^5.4",
+                "php-coveralls/php-coveralls": "^2.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "JosePostiga\\Larabeat\\LarabeatServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JosePostiga\\Larabeat\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "José Postiga",
+                    "email": "me@josepostiga.com",
+                    "homepage": "https://josepostiga.com"
+                }
+            ],
+            "description": "A health-check endpoint for your Laravel applications",
+            "homepage": "https://github.com/josepostiga/larabeat",
+            "keywords": [
+                "health-check",
+                "larabeat",
+                "laravel",
+                "lumen",
+                "package",
+                "php"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/josepostiga",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-08-22T15:24:03+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -7609,6 +7672,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2019-09-17T06:23:10+00:00"
         },
         {

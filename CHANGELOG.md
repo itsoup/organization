@@ -19,6 +19,7 @@ All notable changes to this repository will be documented in this file.
 ### Removed
 
 - `.http-client` folder for practical API calls collections' storing.
+- health check code in favor of a dedicated package: `josepostiga/larabeat`
 
 ### Fixed
 
