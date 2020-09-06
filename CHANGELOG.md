@@ -27,7 +27,7 @@ All notable changes to this repository will be documented in this file.
 
 ### Security
 
-- N/A
+- Updated dependencies
 
 ## 1.0.0-rc1 - 2020-07-25
 
