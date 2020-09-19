@@ -6,6 +6,32 @@ All notable changes to this repository will be documented in this file.
 
 ### Added
 
+- N/A
+
+### Changed
+
+- N/A
+
+### Deprecated
+
+- N/A
+
+### Removed
+
+- N/A
+
+### Fixed
+
+- N/A
+
+### Security
+
+- N/A
+
+## 1.0.0-rc2 - 2020-09-19
+
+### Added
+
 - Scopes to Roles resource to be used by the new Asset Active Directory domain service (#41)
 
 ### Changed
