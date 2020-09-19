@@ -2,6 +2,7 @@
 
 namespace Domains\Users\Tests\Feature\Controllers\Users;
 
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
@@ -18,13 +19,9 @@ class UsersShowControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->systemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $this->systemOperator = UserFactory::new()->systemOperator()->create();
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
     }
 
     /** @test */
@@ -89,9 +86,7 @@ class UsersShowControllerTest extends TestCase
     /** @test */
     public function system_operators_can_view_other_system_operators(): void
     {
-        $anotherSystemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $anotherSystemOperator = UserFactory::new()->systemOperator()->create();
 
         Passport::actingAs($this->systemOperator, [
             'organization:users:view',
@@ -118,11 +113,9 @@ class UsersShowControllerTest extends TestCase
     /** @test */
     public function users_can_view_resources_of_their_customer(): void
     {
-        $userFromSameCustomer = factory(User::class)
-            ->state('user')
-            ->create([
-                'customer_id' => $this->user->customer_id,
-            ]);
+        $userFromSameCustomer = UserFactory::new()->user()->create([
+            'customer_id' => $this->user->customer_id,
+        ]);
 
         Passport::actingAs($this->user, [
             'organization:users:view',
@@ -153,9 +146,7 @@ class UsersShowControllerTest extends TestCase
     /** @test */
     public function users_cant_view_resources_of_other_customers(): void
     {
-        $userFromAnotherCustomer = factory(User::class)
-            ->state('user')
-            ->create();
+        $userFromAnotherCustomer = UserFactory::new()->user()->create();
 
         Passport::actingAs($this->user, [
             'organization:users:view',
@@ -181,11 +172,9 @@ class UsersShowControllerTest extends TestCase
     /** @test */
     public function users_can_view_deleted_resources(): void
     {
-        $deletedUser = factory(User::class)
-            ->states('user', 'deleted')
-            ->create([
-                'customer_id' => $this->user->customer_id,
-            ]);
+        $deletedUser = UserFactory::new()->user()->deleted()->create([
+            'customer_id' => $this->user->customer_id,
+        ]);
 
         Passport::actingAs($this->user, [
             'organization:users:view',

@@ -3,6 +3,7 @@
 namespace Domains\Roles\Tests\Unit\Models;
 
 use Domains\Customers\Models\Customer;
+use Domains\Roles\Database\Factories\RoleFactory;
 use Domains\Roles\Models\Role;
 use Domains\Users\Models\User;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -17,7 +18,7 @@ class RoleModelTest extends TestCase
     {
         parent::setUp();
 
-        $this->model = factory(Role::class)->make([
+        $this->model = RoleFactory::new()->make([
             'customer_id' => null,
         ]);
     }

@@ -2,7 +2,9 @@
 
 namespace Domains\Roles\Tests\Feature\Controllers;
 
+use Domains\Roles\Database\Factories\RoleFactory;
 use Domains\Roles\Models\Role;
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
@@ -19,13 +21,11 @@ class RolesShowControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
 
-        $this->role = factory(Role::class)->create([
+        $this->role = RoleFactory::new([
             'customer_id' => $this->user->customer_id,
-        ]);
+        ])->create();
     }
 
     /** @test */
@@ -84,7 +84,7 @@ class RolesShowControllerTest extends TestCase
     /** @test */
     public function it_fails_to_show_resources_related_to_other_customers(): void
     {
-        $anotherCustomerRole = factory(Role::class)->create();
+        $anotherCustomerRole = RoleFactory::new()->create();
 
         Passport::actingAs($this->user, [
             'organization:roles:view',

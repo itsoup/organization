@@ -2,7 +2,9 @@
 
 namespace Domains\Roles\Tests\Feature\Controllers;
 
+use Domains\Roles\Database\Factories\RoleFactory;
 use Domains\Roles\Models\Role;
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -21,13 +23,11 @@ class RolesUpdateControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
 
-        $this->role = factory(Role::class)->create([
+        $this->role = RoleFactory::new([
             'customer_id' => $this->user->customer_id,
-        ]);
+        ])->create();
     }
 
     /** @test */
@@ -108,7 +108,7 @@ class RolesUpdateControllerTest extends TestCase
     /** @test */
     public function it_fails_to_update_resources_of_other_customers(): void
     {
-        $otherCustomerRole = factory(Role::class)->create();
+        $otherCustomerRole = RoleFactory::new()->create();
 
         $payload = [
             'name' => $this->faker->word,
@@ -153,13 +153,11 @@ class RolesUpdateControllerTest extends TestCase
     /** @test */
     public function system_operators_can_update_resources_with_scopes_for_customers_module(): void
     {
-        $systemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $systemOperator = UserFactory::new()->systemOperator()->create();
 
-        $role = factory(Role::class)->create([
+        $role = RoleFactory::new([
             'customer_id' => $systemOperator->customer_id,
-        ]);
+        ])->create();
 
         $payload = [
             'name' => $this->faker->name,

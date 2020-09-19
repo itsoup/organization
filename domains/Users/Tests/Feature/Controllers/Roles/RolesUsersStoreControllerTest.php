@@ -2,7 +2,9 @@
 
 namespace Domains\Users\Tests\Feature\Controllers\Roles;
 
+use Domains\Roles\Database\Factories\RoleFactory;
 use Domains\Roles\Models\Role;
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -24,23 +26,17 @@ class RolesUsersStoreControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->systemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $this->systemOperator = UserFactory::new()->systemOperator()->create();
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
 
-        $this->userToHandle = factory(User::class)
-            ->state('user')
-            ->create([
-                'customer_id' => $this->user->customer_id,
-            ]);
-
-        $this->role = factory(Role::class)->create([
+        $this->userToHandle = UserFactory::new()->user()->create([
             'customer_id' => $this->user->customer_id,
         ]);
+
+        $this->role = RoleFactory::new([
+            'customer_id' => $this->user->customer_id,
+        ])->create();
     }
 
     /** @test */
@@ -130,13 +126,11 @@ class RolesUsersStoreControllerTest extends TestCase
     /** @test */
     public function it_attaches_roles_to_system_operators(): void
     {
-        $systemOperatorToHandle = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $systemOperatorToHandle = UserFactory::new()->systemOperator()->create();
 
-        $role = factory(Role::class)->create([
+        $role = RoleFactory::new([
             'customer_id' => $systemOperatorToHandle->customer_id,
-        ]);
+        ])->create();
 
         $payload = [
             'roles' => [
@@ -161,13 +155,11 @@ class RolesUsersStoreControllerTest extends TestCase
     /** @test */
     public function it_attaches_roles_to_deleted_system_operators(): void
     {
-        $systemOperatorToHandle = factory(User::class)
-            ->states('system-operator', 'deleted')
-            ->create();
+        $systemOperatorToHandle = UserFactory::new()->systemOperator()->deleted()->create();
 
-        $role = factory(Role::class)->create([
+        $role = RoleFactory::new([
             'customer_id' => $systemOperatorToHandle->customer_id,
-        ]);
+        ])->create();
 
         $payload = [
             'roles' => [
@@ -192,9 +184,7 @@ class RolesUsersStoreControllerTest extends TestCase
     /** @test */
     public function it_cant_attach_roles_to_other_customers_users(): void
     {
-        $otherCustomerUser = factory(User::class)
-            ->state('user')
-            ->create();
+        $otherCustomerUser = UserFactory::new()->user()->create();
 
         $payload = [
             'roles' => [
@@ -234,7 +224,7 @@ class RolesUsersStoreControllerTest extends TestCase
     {
         $payload = [
             'roles' => [
-                factory(Role::class)->create()->id,
+                RoleFactory::new()->create()->id,
             ],
         ];
 

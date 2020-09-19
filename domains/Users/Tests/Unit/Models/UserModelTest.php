@@ -5,6 +5,7 @@ namespace Domains\Users\Tests\Unit\Models;
 use Domains\Customers\Models\Customer;
 use Domains\Roles\Models\Role;
 use Domains\Users\Casts\PasswordCast;
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -20,9 +21,9 @@ class UserModelTest extends TestCase
     {
         parent::setUp();
 
-        $this->model = factory(User::class)->make([
+        $this->model = UserFactory::new([
             'id' => 1,
-        ]);
+        ])->make();
     }
 
     /** @test */

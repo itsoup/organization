@@ -2,7 +2,9 @@
 
 namespace Domains\Users\Tests\Feature\Controllers;
 
+use Domains\Roles\Database\Factories\RoleFactory;
 use Domains\Roles\Models\Role;
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -34,15 +36,15 @@ class AccessTokenControllerIssueTokenTest extends TestCase
             'revoked' => false,
         ]);
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create([
-                'password' => 'secret',
-            ]);
+        $this->user = UserFactory::new([
+            'password' => 'secret',
+        ])
+            ->user()
+            ->create();
 
-        $this->role = factory(Role::class)->create([
+        $this->role = RoleFactory::new([
             'customer_id' => $this->user->customer_id,
-        ]);
+        ])->create();
 
         $this->user->roles()->sync($this->role);
     }
@@ -50,7 +52,7 @@ class AccessTokenControllerIssueTokenTest extends TestCase
     /** @test */
     public function it_issues_a_jwt_token_with_required_correct_user_information(): void
     {
-        $accessToken = $this->postJson('/oauth/token', [
+        $response = $this->postJson('/oauth/token', [
             'grant_type' => 'password',
             'client_id' => $this->passportClient->id,
             'client_secret' => $this->passportClient->secret,
@@ -58,9 +60,9 @@ class AccessTokenControllerIssueTokenTest extends TestCase
             'password' => 'secret',
         ])
             ->assertOk()
-            ->decodeResponseJson('access_token');
+            ->decodeResponseJson();
 
-        $decodedJwt = (new Parser())->parse($accessToken);
+        $decodedJwt = (new Parser())->parse($response['access_token']);
 
         self::assertEquals($this->user->id, $decodedJwt->getClaim('sub'));
         self::assertEquals($this->user->customer_id, $decodedJwt->getClaim('customer_id'));
@@ -74,11 +76,12 @@ class AccessTokenControllerIssueTokenTest extends TestCase
     /** @test */
     public function it_doesnt_issues_jwt_to_unverified_users(): void
     {
-        $unverifiedUser = factory(User::class)
-            ->states('user', 'unverified')
-            ->create([
-                'password' => 'secret',
-            ]);
+        $unverifiedUser = UserFactory::new([
+            'password' => 'secret',
+        ])
+            ->user()
+            ->unverified()
+            ->create();
 
         $this->postJson('/oauth/token', [
             'grant_type' => 'password',

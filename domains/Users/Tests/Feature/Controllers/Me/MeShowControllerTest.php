@@ -2,6 +2,7 @@
 
 namespace Domains\Users\Tests\Feature\Controllers\Me;
 
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
@@ -17,9 +18,7 @@ class MeShowControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
     }
 
     /** @test */

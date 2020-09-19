@@ -2,6 +2,7 @@
 
 namespace Domains\Users\Tests\Feature\Controllers\Me;
 
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -16,7 +17,6 @@ class MeTokensIndexControllerTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
-    private Client $passportClient;
     private User $user;
     private Token $token;
 
@@ -24,7 +24,7 @@ class MeTokensIndexControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->passportClient = Client::forceCreate([
+        $passportClient = Client::forceCreate([
             'name' => $this->faker->company,
             'secret' => Str::random(40),
             'redirect' => $this->faker->url,
@@ -33,14 +33,12 @@ class MeTokensIndexControllerTest extends TestCase
             'revoked' => false,
         ]);
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
 
         $this->token = $this->user->tokens()->create([
             'id' => Str::random(100),
             'user_id' => $this->user->id,
-            'client_id' => $this->passportClient->id,
+            'client_id' => $passportClient->id,
             'revoked' => false,
             'name' => '',
             'scopes' => [],

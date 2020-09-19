@@ -2,7 +2,8 @@
 
 namespace Domains\Users\Tests\Feature\Controllers\Users;
 
-use Domains\Customers\Models\Customer;
+use Domains\Customers\Database\Factories\CustomerFactory;
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,13 +25,9 @@ class UsersStoreControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->systemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $this->systemOperator = UserFactory::new()->systemOperator()->create();
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
     }
 
     /** @test */
@@ -95,9 +92,7 @@ class UsersStoreControllerTest extends TestCase
     /** @test */
     public function users_cant_store_new_system_operators(): void
     {
-        $user = factory(User::class)
-            ->state('user')
-            ->create();
+        $user = UserFactory::new()->user()->create();
 
         Passport::actingAs($user, [
             'organization:users:view',
@@ -126,7 +121,7 @@ class UsersStoreControllerTest extends TestCase
     {
         Notification::fake();
 
-        $customer = factory(Customer::class)->create();
+        $customer = CustomerFactory::new()->create();
 
         Passport::actingAs($this->systemOperator, [
             'organization:users:view',
@@ -238,7 +233,9 @@ class UsersStoreControllerTest extends TestCase
 
         $this->postJson('/users')
             ->assertJsonValidationErrors([
-                'name', 'email', 'password',
+                'name',
+                'email',
+                'password',
             ]);
     }
 

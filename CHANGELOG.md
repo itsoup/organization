@@ -10,7 +10,7 @@ All notable changes to this repository will be documented in this file.
 
 ### Changed
 
-- N/A
+- Upgraded laravel framework to v8.x
 
 ### Deprecated
 

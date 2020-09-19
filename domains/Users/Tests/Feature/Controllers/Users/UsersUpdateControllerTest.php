@@ -2,7 +2,8 @@
 
 namespace Domains\Users\Tests\Feature\Controllers\Users;
 
-use Domains\Customers\Models\Customer;
+use Domains\Customers\Database\Factories\CustomerFactory;
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -22,19 +23,13 @@ class UsersUpdateControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->systemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $this->systemOperator = UserFactory::new()->systemOperator()->create();
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
 
-        $this->userToUpdate = factory(User::class)
-            ->state('user')
-            ->create([
-                'customer_id' => $this->user->customer_id,
-            ]);
+        $this->userToUpdate = UserFactory::new()->user()->create([
+            'customer_id' => $this->user->customer_id,
+        ]);
     }
 
     /** @test */
@@ -56,7 +51,7 @@ class UsersUpdateControllerTest extends TestCase
     /** @test */
     public function system_operators_can_update_any_resource(): void
     {
-        $anotherCustomer = factory(Customer::class)->create();
+        $anotherCustomer = CustomerFactory::new()->create();
 
         $payload = [
             'name' => $this->faker->name,
@@ -101,9 +96,7 @@ class UsersUpdateControllerTest extends TestCase
     /** @test */
     public function users_cant_update_resources_from_other_customers(): void
     {
-        $userFromAnotherCustomer = factory(User::class)
-            ->state('user')
-            ->create();
+        $userFromAnotherCustomer = UserFactory::new()->user()->create();
 
         $payload = [
             'name' => $this->faker->name,
@@ -124,7 +117,7 @@ class UsersUpdateControllerTest extends TestCase
     /** @test */
     public function users_cant_update_resources_customer_id(): void
     {
-        $anotherCustomer = factory(Customer::class)->create();
+        $anotherCustomer = CustomerFactory::new()->create();
 
         $payload = [
             'name' => $this->faker->name,
@@ -164,11 +157,9 @@ class UsersUpdateControllerTest extends TestCase
     /** @test */
     public function users_cant_update_resources_customer_id_to_null(): void
     {
-        $anotherUser = factory(User::class)
-            ->state('user')
-            ->create([
-                'customer_id' => $this->userToUpdate->customer_id,
-            ]);
+        $anotherUser = UserFactory::new()->user()->create([
+            'customer_id' => $this->userToUpdate->customer_id,
+        ]);
 
         $payload = [
             'name' => $this->faker->name,

@@ -2,6 +2,7 @@
 
 namespace Domains\Users\Tests\Feature\Controllers\Users;
 
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
@@ -18,13 +19,9 @@ class UsersDeleteControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->systemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $this->systemOperator = UserFactory::new()->systemOperator()->create();
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
     }
 
     /** @test */
@@ -46,12 +43,9 @@ class UsersDeleteControllerTest extends TestCase
     /** @test */
     public function unauthorized_users_cant_delete_resources(): void
     {
-        /** @var User $userToDelete */
-        $userToDelete = factory(User::class)
-            ->state('user')
-            ->create([
-                'customer_id' => $this->user->customer_id,
-            ]);
+        $userToDelete = UserFactory::new()->user()->create([
+            'customer_id' => $this->user->customer_id,
+        ]);
 
         Passport::actingAs($this->user);
 
@@ -62,9 +56,7 @@ class UsersDeleteControllerTest extends TestCase
     /** @test */
     public function system_operators_can_delete_other_system_operators(): void
     {
-        $anotherSystemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $anotherSystemOperator = UserFactory::new()->systemOperator()->create();
 
         Passport::actingAs($this->systemOperator, [
             'organization:users:view',
@@ -110,12 +102,9 @@ class UsersDeleteControllerTest extends TestCase
     /** @test */
     public function users_can_delete_other_users_related_with_their_customer(): void
     {
-        /** @var User $userToDelete */
-        $userToDelete = factory(User::class)
-            ->state('user')
-            ->create([
-                'customer_id' => $this->user->customer_id,
-            ]);
+        $userToDelete = UserFactory::new()->user()->create([
+            'customer_id' => $this->user->customer_id,
+        ]);
 
         Passport::actingAs($this->user, [
             'organization:users:view',
@@ -131,10 +120,7 @@ class UsersDeleteControllerTest extends TestCase
     /** @test */
     public function users_cant_delete_other_users_of_other_customers(): void
     {
-        /** @var User $userToDelete */
-        $userToDelete = factory(User::class)
-            ->state('user')
-            ->create();
+        $userToDelete = UserFactory::new()->user()->create();
 
         Passport::actingAs($this->user, [
             'organization:users:view',

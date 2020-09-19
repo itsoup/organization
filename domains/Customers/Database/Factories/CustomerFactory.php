@@ -1,19 +1,32 @@
 <?php
 
+namespace Domains\Customers\Database\Factories;
+
 use Domains\Customers\Models\Customer;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(Customer::class, static fn (\Faker\Generator $faker) => [
-    'name' => $faker->company,
-    'address' => $faker->address,
-    'country' => $faker->countryCode,
-    'vat_number' => static fn (array $customer) => $customer['country'] . $faker->randomNumber(9),
-    'logo' => null,
-    'created_at' => now(),
-    'updated_at' => now(),
-    'deleted_at' => null,
-]);
+class CustomerFactory extends Factory
+{
+    protected $model = Customer::class;
 
-$factory->state(Customer::class, 'deleted', [
-    'deleted_at' => now(),
-]);
+    public function definition(): array
+    {
+        return [
+            'name' => $this->faker->company,
+            'address' => $this->faker->address,
+            'country' => $this->faker->countryCode,
+            'vat_number' => fn (array $customer) => $customer['country'] . $this->faker->randomNumber(9),
+            'logo' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
+        ];
+    }
+
+    public function deleted(): self
+    {
+        return $this->state([
+            'deleted_at' => now(),
+        ]);
+    }
+}

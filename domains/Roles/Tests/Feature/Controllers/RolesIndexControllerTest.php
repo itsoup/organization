@@ -2,8 +2,8 @@
 
 namespace Domains\Roles\Tests\Feature\Controllers;
 
-use Domains\Customers\Models\Customer;
-use Domains\Roles\Models\Role;
+use Domains\Roles\Database\Factories\RoleFactory;
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
@@ -19,13 +19,11 @@ class RolesIndexControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
 
-        factory(Role::class)->create([
+        RoleFactory::new([
             'customer_id' => $this->user->customer_id,
-        ]);
+        ])->create();
     }
 
     /** @test */
@@ -47,11 +45,11 @@ class RolesIndexControllerTest extends TestCase
     /** @test */
     public function it_lists_non_deleted_resources(): void
     {
-        $deletedResource = factory(Role::class)
-            ->state('deleted')
-            ->create([
-                'customer_id' => $this->user->customer_id,
-            ]);
+        $deletedResource = RoleFactory::new([
+            'customer_id' => $this->user->customer_id,
+        ])
+            ->deleted()
+            ->create();
 
         Passport::actingAs($this->user, [
             'organization:roles:view',
@@ -69,7 +67,7 @@ class RolesIndexControllerTest extends TestCase
                         'created_at',
                         'updated_at',
                         'deleted_at',
-                    ]
+                    ],
                 ],
                 'links' => [
                     'first',
@@ -86,7 +84,7 @@ class RolesIndexControllerTest extends TestCase
     /** @test */
     public function it_lists_resources_related_with_user_customer_id(): void
     {
-        $otherCompanyResource = factory(Role::class)->create();
+        $otherCompanyResource = RoleFactory::new()->create();
 
         Passport::actingAs($this->user, [
             'organization:roles:view',
@@ -102,13 +100,11 @@ class RolesIndexControllerTest extends TestCase
     /** @test */
     public function it_lists_resources_related_with_system_operators_customer_id(): void
     {
-        $systemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $systemOperator = UserFactory::new()->systemOperator()->create();
 
-        $role = factory(Role::class)->create([
-            'customer_id' => null
-        ]);
+        $role = RoleFactory::new([
+            'customer_id' => null,
+        ])->create();
 
         Passport::actingAs($systemOperator, [
             'organization:roles:view',
@@ -120,19 +116,19 @@ class RolesIndexControllerTest extends TestCase
                 'data' => [
                     [
                         'id' => $role->id,
-                    ]
-                ]
+                    ],
+                ],
             ]);
     }
 
     /** @test */
     public function it_lists_deleted_resources_if_requested(): void
     {
-        $deletedResource = factory(Role::class)
-            ->state('deleted')
-            ->create([
-                'customer_id' => $this->user->customer_id,
-            ]);
+        $deletedResource = RoleFactory::new([
+            'customer_id' => $this->user->customer_id,
+        ])
+            ->deleted()
+            ->create();
 
         Passport::actingAs($this->user, [
             'organization:roles:view',
@@ -166,7 +162,7 @@ class RolesIndexControllerTest extends TestCase
     /** @test */
     public function it_navigates_to_next_page(): void
     {
-        factory(Role::class, 15)->create();
+        RoleFactory::times(15)->create();
 
         Passport::actingAs($this->user, [
             'organization:roles:view',

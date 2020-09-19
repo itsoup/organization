@@ -2,6 +2,7 @@
 
 namespace Domains\Customers\Tests\Feature\Controllers;
 
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -21,9 +22,7 @@ class CustomersStoreControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->systemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $this->systemOperator = UserFactory::new()->systemOperator()->create();
     }
 
     /** @test */
@@ -36,9 +35,7 @@ class CustomersStoreControllerTest extends TestCase
     /** @test */
     public function unauthorized_users_cant_store_resources(): void
     {
-        $user = factory(User::class)
-            ->state('user')
-            ->create();
+        $user = UserFactory::new()->user()->create();
 
         Passport::actingAs($user);
 

@@ -2,7 +2,8 @@
 
 namespace Domains\Customers\Tests\Feature\Controllers;
 
-use Domains\Customers\Models\Customer;
+use Domains\Customers\Database\Factories\CustomerFactory;
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
@@ -18,11 +19,9 @@ class CustomersIndexControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->systemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $this->systemOperator = UserFactory::new()->systemOperator()->create();
 
-        factory(Customer::class, 5)->create();
+        CustomerFactory::times(5)->create();
     }
 
     /** @test */
@@ -35,9 +34,7 @@ class CustomersIndexControllerTest extends TestCase
     /** @test */
     public function unauthorized_users_cant_access_resources(): void
     {
-        $user = factory(User::class)
-            ->state('user')
-            ->create();
+        $user = UserFactory::new()->user()->create();
 
         Passport::actingAs($user);
 
@@ -48,7 +45,7 @@ class CustomersIndexControllerTest extends TestCase
     /** @test */
     public function it_lists_non_deleted_resources(): void
     {
-        $deletedCustomer = factory(Customer::class)->state('deleted')->create();
+        $deletedCustomer = CustomerFactory::new()->deleted()->create();
 
         Passport::actingAs($this->systemOperator, [
             'organization:customers:view',
@@ -82,7 +79,7 @@ class CustomersIndexControllerTest extends TestCase
     /** @test */
     public function it_lists_deleted_resources_if_requested(): void
     {
-        $deletedCustomer = factory(Customer::class)->state('deleted')->create();
+        $deletedCustomer = CustomerFactory::new()->deleted()->create();
 
         Passport::actingAs($this->systemOperator, [
             'organization:customers:view',
@@ -98,7 +95,7 @@ class CustomersIndexControllerTest extends TestCase
     /** @test */
     public function it_navigates_to_next_page(): void
     {
-        factory(Customer::class, 15)->create();
+        CustomerFactory::times(15)->create();
 
         Passport::actingAs($this->systemOperator, [
             'organization:customers:view',

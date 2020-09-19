@@ -2,7 +2,8 @@
 
 namespace Domains\Users\Tests\Feature\Controllers\Roles;
 
-use Domains\Roles\Models\Role;
+use Domains\Roles\Database\Factories\RoleFactory;
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
@@ -19,21 +20,15 @@ class RolesUsersIndexControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->systemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $this->systemOperator = UserFactory::new()->systemOperator()->create();
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
     }
 
     /** @test */
     public function unauthenticated_users_cant_access_endpoint(): void
     {
-        $userToHandle = factory(User::class)
-            ->state('user')
-            ->create();
+        $userToHandle = UserFactory::new()->user()->create();
 
         $this->getJson("/users/{$userToHandle->id}/roles")
             ->assertUnauthorized();
@@ -42,8 +37,8 @@ class RolesUsersIndexControllerTest extends TestCase
     /** @test */
     public function unauthorized_users_cant_access_endpoint(): void
     {
-        $userToHandle = factory(User::class)
-            ->state('user')
+        $userToHandle = UserFactory::new()
+            ->user()
             ->create([
                 'customer_id' => $this->user->customer_id,
             ]);
@@ -57,15 +52,15 @@ class RolesUsersIndexControllerTest extends TestCase
     /** @test */
     public function it_lists_all_resources_attached_to_a_user(): void
     {
-        $userToHandle = factory(User::class)
-            ->state('user')
+        $userToHandle = UserFactory::new()
+            ->user()
             ->create([
                 'customer_id' => $this->user->customer_id,
             ]);
 
-        $role = factory(Role::class)->create([
+        $role = RoleFactory::new([
             'customer_id' => $userToHandle->customer_id,
-        ]);
+        ])->create();
 
         $userToHandle->roles()->sync(
             $role->id,
@@ -89,15 +84,16 @@ class RolesUsersIndexControllerTest extends TestCase
     /** @test */
     public function it_lists_all_resources_attached_to_a_deleted_user(): void
     {
-        $userToHandle = factory(User::class)
-            ->states('user', 'deleted')
+        $userToHandle = UserFactory::new()
+            ->user()
+            ->deleted()
             ->create([
                 'customer_id' => $this->user->customer_id,
             ]);
 
-        $role = factory(Role::class)->create([
+        $role = RoleFactory::new([
             'customer_id' => $userToHandle->customer_id,
-        ]);
+        ])->create();
 
         $userToHandle->roles()->sync(
             $role->id,
@@ -121,13 +117,11 @@ class RolesUsersIndexControllerTest extends TestCase
     /** @test */
     public function it_lists_all_resources_attached_to_a_system_operator(): void
     {
-        $systemOperatorToHandle = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $systemOperatorToHandle = UserFactory::new()->systemOperator()->create();
 
-        $role = factory(Role::class)->create([
+        $role = RoleFactory::new([
             'customer_id' => $systemOperatorToHandle->customer_id,
-        ]);
+        ])->create();
 
         $systemOperatorToHandle->roles()->sync(
             $role->id,
@@ -151,13 +145,11 @@ class RolesUsersIndexControllerTest extends TestCase
     /** @test */
     public function it_lists_all_resources_attached_to_a_deleted_system_operator(): void
     {
-        $systemOperatorToHandle = factory(User::class)
-            ->states('system-operator', 'deleted')
-            ->create();
+        $systemOperatorToHandle = UserFactory::new()->systemOperator()->deleted()->create();
 
-        $role = factory(Role::class)->create([
+        $role = RoleFactory::new([
             'customer_id' => $systemOperatorToHandle->customer_id,
-        ]);
+        ])->create();
 
         $systemOperatorToHandle->roles()->sync(
             $role->id,
@@ -181,9 +173,7 @@ class RolesUsersIndexControllerTest extends TestCase
     /** @test */
     public function it_fails_listing_resources_attaches_to_other_customers_users(): void
     {
-        $anotherCustomerUser = factory(User::class)
-            ->state('user')
-            ->create();
+        $anotherCustomerUser = UserFactory::new()->user()->create();
 
         Passport::actingAs($this->user, [
             'organization:users:view',

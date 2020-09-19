@@ -2,6 +2,7 @@
 
 namespace Domains\Users\Tests\Feature\Controllers\Me;
 
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -20,9 +21,7 @@ class MeUpdateControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
     }
 
     /** @test */
@@ -63,9 +62,7 @@ class MeUpdateControllerTest extends TestCase
     /** @test */
     public function it_fails_update_if_email_is_registered_to_other_user(): void
     {
-        $anotherUser = factory(User::class)
-            ->state('user')
-            ->create();
+        $anotherUser = UserFactory::new()->user()->create();
 
         Passport::actingAs($this->user);
 
@@ -80,9 +77,7 @@ class MeUpdateControllerTest extends TestCase
     /** @test */
     public function it_fails_update_if_vat_number_is_registered_to_other_user(): void
     {
-        $anotherUser = factory(User::class)
-            ->state('user')
-            ->create();
+        $anotherUser = UserFactory::new()->user()->create();
 
         Passport::actingAs($this->user);
 

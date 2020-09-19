@@ -3,6 +3,7 @@
 
 namespace Domains\Users\Tests\Feature\Controllers\Verification;
 
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,9 +26,7 @@ class EmailVerificationControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)
-            ->states('user', 'unverified')
-            ->create();
+        $this->user = UserFactory::new()->user()->unverified()->create();
     }
 
     /** @test */

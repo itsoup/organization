@@ -2,6 +2,7 @@
 
 namespace Domains\Users\Tests\Feature\Controllers\Me;
 
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -33,9 +34,7 @@ class MeTokensDeleteControllerTest extends TestCase
             'revoked' => false,
         ]);
 
-        $this->user = factory(User::class)
-            ->state('user')
-            ->create();
+        $this->user = UserFactory::new()->user()->create();
 
         $this->token = $this->user->tokens()->create([
             'id' => Str::random(100),
@@ -70,9 +69,7 @@ class MeTokensDeleteControllerTest extends TestCase
     /** @test */
     public function it_cant_delete_resources_of_other_users(): void
     {
-        $anotherUser = factory(User::class)
-            ->state('user')
-            ->create();
+        $anotherUser = UserFactory::new()->user()->create();
 
         $anotherUserToken = $anotherUser->tokens()->create([
             'id' => Str::random(100),

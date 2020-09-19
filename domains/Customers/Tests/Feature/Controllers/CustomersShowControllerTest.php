@@ -2,7 +2,9 @@
 
 namespace Domains\Customers\Tests\Feature\Controllers;
 
+use Domains\Customers\Database\Factories\CustomerFactory;
 use Domains\Customers\Models\Customer;
+use Domains\Users\Database\Factories\UserFactory;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
@@ -19,11 +21,9 @@ class CustomersShowControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->systemOperator = factory(User::class)
-            ->state('system-operator')
-            ->create();
+        $this->systemOperator = UserFactory::new()->systemOperator()->create();
 
-        $this->customer = factory(Customer::class)->create();
+        $this->customer = CustomerFactory::new()->create();
     }
 
     /** @test */
@@ -36,9 +36,7 @@ class CustomersShowControllerTest extends TestCase
     /** @test */
     public function unauthorized_users_cant_access_resource(): void
     {
-        $user = factory(User::class)
-            ->state('user')
-            ->create();
+        $user = UserFactory::new()->user()->create();
 
         Passport::actingAs($user);
 
