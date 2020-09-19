@@ -22,7 +22,7 @@ All notable changes to this repository will be documented in this file.
 
 ### Fixed
 
-- N/A
+- Updated phpunit validation schema
 
 ### Security
 
