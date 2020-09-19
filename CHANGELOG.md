@@ -38,18 +38,10 @@ All notable changes to this repository will be documented in this file.
 
 - Upgraded laravel framework to v8.x
 
-### Deprecated
-
-- N/A
-
 ### Removed
 
 - `.http-client` folder for practical API calls collections' storing.
 - health check code in favor of a dedicated package: `josepostiga/larabeat`
-
-### Fixed
-
-- N/A
 
 ### Security
 
