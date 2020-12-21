@@ -2,14 +2,11 @@
 
 namespace Domains\Users\Bridges;
 
+use DateTimeImmutable;
 use Domains\Users\Models\User;
 use Laravel\Passport\Bridge\AccessToken as PassportAccessToken;
 use Laravel\Passport\Bridge\Scope;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Key;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
-use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
 
@@ -39,14 +36,16 @@ class UserAccessToken extends PassportAccessToken
             ->toArray();
     }
 
-    private function convertToJWT(CryptKey $privateKey): Token
+    private function convertToJWT(): Token
     {
-        return (new Builder())
+        $this->initJwtConfiguration();
+
+        return $this->jwtConfiguration->builder()
             ->permittedFor($this->getClient()->getIdentifier())
             ->identifiedBy($this->getIdentifier())
-            ->issuedAt(\time())
-            ->canOnlyBeUsedAfter(\time())
-            ->expiresAt($this->getExpiryDateTime()->getTimestamp())
+            ->issuedAt(new DateTimeImmutable())
+            ->canOnlyBeUsedAfter(new DateTimeImmutable())
+            ->expiresAt($this->getExpiryDateTime())
             ->relatedTo((string) $this->getUserIdentifier())
             ->withClaim('scopes', $this->getScopes())
             ->withClaim('customer_id', $this->user->customer_id)
@@ -54,6 +53,6 @@ class UserAccessToken extends PassportAccessToken
             ->withClaim('name', $this->user->name)
             ->withClaim('email', $this->user->email)
             ->withClaim('account_type', $this->user->account_type)
-            ->getToken(new Sha256(), new Key($privateKey->getKeyPath(), $privateKey->getPassPhrase()));
+            ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey());
     }
 }

@@ -11,7 +11,8 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Laravel\Passport\Client;
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Token\Plain;
 use Tests\TestCase;
 
 class AccessTokenControllerIssueTokenTest extends TestCase
@@ -62,15 +63,18 @@ class AccessTokenControllerIssueTokenTest extends TestCase
             ->assertOk()
             ->decodeResponseJson();
 
-        $decodedJwt = (new Parser())->parse($response['access_token']);
+        /** @var Plain $decodedJwt */
+        $decodedJwt = Configuration::forUnsecuredSigner()
+            ->parser()
+            ->parse($response['access_token']);
 
-        self::assertEquals($this->user->id, $decodedJwt->getClaim('sub'));
-        self::assertEquals($this->user->customer_id, $decodedJwt->getClaim('customer_id'));
-        self::assertEquals($this->user->vat_number, $decodedJwt->getClaim('vat_number'));
-        self::assertEquals($this->user->name, $decodedJwt->getClaim('name'));
-        self::assertEquals($this->user->email, $decodedJwt->getClaim('email'));
-        self::assertEquals($this->user->account_type, $decodedJwt->getClaim('account_type'));
-        self::assertEquals($this->role->scopes, $decodedJwt->getClaim('scopes'));
+        self::assertEquals($this->user->id, $decodedJwt->claims()->get('sub'));
+        self::assertEquals($this->user->customer_id, $decodedJwt->claims()->get('customer_id'));
+        self::assertEquals($this->user->vat_number, $decodedJwt->claims()->get('vat_number'));
+        self::assertEquals($this->user->name, $decodedJwt->claims()->get('name'));
+        self::assertEquals($this->user->email, $decodedJwt->claims()->get('email'));
+        self::assertEquals($this->user->account_type, $decodedJwt->claims()->get('account_type'));
+        self::assertEquals($this->role->scopes, $decodedJwt->claims()->get('scopes'));
     }
 
     /** @test */
