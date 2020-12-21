@@ -26,19 +26,20 @@ services:
       - data_network
 
   db:
-    image: mariadb
+    image: postgres:13
     environment:
-      MYSQL_DATABASE: organization
+      POSTGRES_USER: root
+      POSTGRES_DB: organization
     expose:
-      - 3306
+      - 5432
     volumes:
-      - itsoup-organization-db:/var/lib/mysql
+      - db:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
       - data_network
 
 volumes:
-  itsoup-organization-db:
+  db:
 
 networks:
   app_network:

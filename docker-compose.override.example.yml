@@ -13,15 +13,10 @@ services:
 
   db:
     ports:
-      - 33061:3306
+      - 54322:5432
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: organization
-    networks:
-      - maintenance
+      POSTGRES_PASSWORD: root
 
 networks:
   web:
-    external: true
-  maintenance:
     external: true

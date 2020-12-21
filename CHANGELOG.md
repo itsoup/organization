@@ -10,7 +10,7 @@ All notable changes to this repository will be documented in this file.
 
 ### Changed
 
-- N/A
+- Switch default db engine to PostgreSQL 13
 
 ### Deprecated
 
