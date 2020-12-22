@@ -23,6 +23,7 @@ All notable changes to this repository will be documented in this file.
 ### Fixed
 
 - Updated phpunit validation schema
+- Users created via the console command have their email immediately verified
 
 ### Security
 

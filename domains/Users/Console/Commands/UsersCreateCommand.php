@@ -36,11 +36,14 @@ class UsersCreateCommand extends Command
 
         $this->validatesArguments($name, $email, $password);
 
+        /** @var User $user */
         $user = $this->users->create([
             'name' => $name,
             'email' => $email,
             'password' => $password,
         ]);
+
+        $user->markEmailAsVerified();
 
         if ($this->roles->count() === 0) {
             $this->createDefaultRoleFor($user);

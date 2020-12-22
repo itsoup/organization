@@ -6,6 +6,7 @@ use Domains\Roles\Models\Role;
 use Domains\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
@@ -25,6 +26,8 @@ class UsersCreateCommandTest extends TestCase
     /** @test */
     public function it_creates_a_resource_as_system_operator_without_any_argument_provided(): void
     {
+        Carbon::setTestNow(Carbon::now());
+
         $userName = $this->faker->name;
         $userEmail = $this->faker->safeEmail;
         $userPassword = $this->faker->password;
@@ -42,6 +45,7 @@ class UsersCreateCommandTest extends TestCase
             'customer_id' => null,
             'name' => $userName,
             'email' => $userEmail,
+            'email_verified_at' => Carbon::now(),
         ]);
 
         /** @var User $newUser */
