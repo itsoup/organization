@@ -11,6 +11,7 @@ All notable changes to this repository will be documented in this file.
 ### Changed
 
 - Switch default db engine to PostgreSQL 13
+- Updates infrastructure config to work with other services
 
 ### Deprecated
 
