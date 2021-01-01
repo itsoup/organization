@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  server:
+  organization_server:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.itsoup-organization.entrypoints=http"
@@ -11,7 +11,7 @@ services:
     networks:
       - web
 
-  db:
+  organization_db:
     ports:
       - 54322:5432
     environment:

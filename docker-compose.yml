@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  server:
+  organization_server:
     image: nginx
     expose:
       - 80
@@ -15,7 +15,7 @@ services:
         aliases:
           - itsoup_organization_service
 
-  app:
+  organization_app:
     image: josepostiga/php:7.4-fpm
     user: "1000:1000"
     expose:
@@ -27,7 +27,7 @@ services:
       - itsoup
       - data_network
 
-  db:
+  organization_db:
     image: postgres:13
     environment:
       POSTGRES_USER: root
