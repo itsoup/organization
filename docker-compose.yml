@@ -11,7 +11,9 @@ services:
       - ./:/var/www/html
     restart: unless-stopped
     networks:
-      - app_network
+      itsoup:
+        aliases:
+          - itsoup_organization_service
 
   app:
     image: josepostiga/php:7.4-fpm
@@ -22,7 +24,7 @@ services:
       - ./:/var/www/html
     restart: unless-stopped
     networks:
-      - app_network
+      - itsoup
       - data_network
 
   db:
@@ -42,5 +44,6 @@ volumes:
   db:
 
 networks:
-  app_network:
+  itsoup:
+    external: true
   data_network:
